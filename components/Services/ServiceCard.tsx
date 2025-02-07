@@ -26,7 +26,7 @@ const ServiceCard: React.FC<{ data: Data }> = ({ data }) => {
     <div className="w-full">
       <Card className="p-5 border border-primary">
         <CardHeader className="flex justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex w-full items-center justify-center gap-4">
             <Avatar
               isBordered
               color="primary"
