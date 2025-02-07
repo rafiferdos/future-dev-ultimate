@@ -40,7 +40,7 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
           </button>
         </CardHeader>
         <CardBody className="space-y-7 flex flex-col items-center ">
-          <h3 className="text-primary capitalize text-center font-bold text-xl ">
+          <h3 className="text-primary capitalize text-center font-bold text-lg ">
             {title}
           </h3>
           <div className="flex items-center gap-3">
