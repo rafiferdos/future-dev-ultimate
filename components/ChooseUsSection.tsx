@@ -30,7 +30,7 @@ const ChooseUsSection: React.FC = () => {
                   />
                   <div className=" space-y-1">
                     <h3 className="font-bold font-siliguri">{data.title}</h3>
-                    <p className="sm:text-sm text-medium lg:text-lg font-atma">{data.description}</p>
+                    <p className="sm:text-sm text-medium lg:text-lg font-siliguri">{data.description}</p>
                   </div>
                 </div>
               ))}

@@ -32,8 +32,8 @@ const ServicesSection: React.FC = () => {
         </div>
 
         {/* Right Section */}
-        <div className="flex lg:col-span-3 pl-6 space-y-10 lg:space-y-0 md:px-0 col-span-1 flex-col justify-center ">
-          <h2 className="font-bold text-3xl lg:text-5xl">
+        <div className="flex font-siliguri gap-6  lg:col-span-3 pl-6 space-y-10 lg:space-y-0 md:px-0 col-span-1 flex-col justify-center ">
+          <h2 className="font-bold text-3xl mt-5 lg:text-5xl">
             Explore Our Services
           </h2>
           <div className="space-y-1  lg:text-xl">

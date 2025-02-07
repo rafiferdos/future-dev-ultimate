@@ -21,7 +21,7 @@ import OfferSection from "@/components/OfferSection/OfferSection";
 
 export default function Home() {
   return (
-    <div className="space-y-24">
+    <div className="space-y-24 font-siliguri">
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 font-siliguri">
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>আপনার সন্তানকে&nbsp;</span>

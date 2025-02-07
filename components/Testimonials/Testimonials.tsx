@@ -1,3 +1,4 @@
+import React from "react";
 import TestimonialsCard from "./TestimonialsCard";
 
 const Testimonials: React.FC = () => {
