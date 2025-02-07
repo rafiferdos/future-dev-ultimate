@@ -35,12 +35,12 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
       {/* Fixed width and height */}
       <Card className="w-full h-[300px] p-5  border border-primary flex flex-col">
         <CardHeader className="flex  justify-center">
-          <button className={`text-${buttonColor} text-2xl`}>
+          <button className={`text-${buttonColor} capitalize text-2xl`}>
           {type}
           </button>
         </CardHeader>
         <CardBody className="space-y-7 flex flex-col items-center ">
-          <h3 className="text-primary text-center font-bold text-xl ">
+          <h3 className="text-primary capitalize text-center font-bold text-xl ">
             {title}
           </h3>
           <div className="flex items-center gap-3">
