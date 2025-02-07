@@ -11,7 +11,7 @@ const Testimonials: React.FC = () => {
         </h2>
       </div>
       <section>
-        <div className="flex flex-col justify-center lg:flex-row lg:justify-between">
+        <div className="flex flex-col justify-center gap-3 lg:flex-row lg:justify-between">
           <div className="flex items-center justify-center">
             <div>
               <p>
