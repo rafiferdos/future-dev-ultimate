@@ -8,6 +8,7 @@ import "swiper/css/bundle";
 import offeringData from "../../lib/offeringData";
 import OfferCard from "./OfferCard";
 import { Button } from "@nextui-org/button";
+import Link from "next/link";
 
 // Define a type
 type OfferingData = {
@@ -67,9 +68,11 @@ const OfferSection: React.FC = () => {
       </Swiper>
 
       <div className="flex items-center justify-center mt-10">
+        <Link href="/all-offer">
         <Button color="primary" variant="ghost">
           Learn more
         </Button>
+        </Link>
       </div>
     </div>
   );

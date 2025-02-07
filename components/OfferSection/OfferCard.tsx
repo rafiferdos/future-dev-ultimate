@@ -19,6 +19,7 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
     "primary";
   if (type === "python") {
     buttonColor = "warning";
+
   } else if (type === "javascript") {
     buttonColor = "success";
   } else if (type === "nextjs") {
@@ -34,16 +35,11 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
       {/* Fixed width and height */}
       <Card className="w-full h-[300px] p-5  border border-primary flex flex-col">
         <CardHeader className="flex  justify-center">
-          <Button
-            color={buttonColor}
-            className="px-12"
-            variant="shadow"
-            radius="full"
-          >
-            {type}
-          </Button>
+          <button className={`text-${buttonColor} text-2xl`}>
+          {type}
+          </button>
         </CardHeader>
-        <CardBody className="space-y-5 flex flex-col items-center ">
+        <CardBody className="space-y-7 flex flex-col items-center ">
           <h3 className="text-primary text-center font-bold text-xl ">
             {title}
           </h3>
