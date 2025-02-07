@@ -30,7 +30,7 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
   }
 
   return (
-    <div className="w-[230px] h-[440px]">
+    <div className="w-full h-full">
       {/* Fixed width and height */}
       <Card className="w-full h-full p-5  border border-primary flex flex-col">
         <CardHeader className="flex  justify-center">
@@ -43,7 +43,7 @@ const OfferCard: React.FC<{ data: Data }> = ({ data }) => {
             {type}
           </Button>
         </CardHeader>
-        <CardBody className="space-y-5 mt-32 flex flex-col items-center ">
+        <CardBody className="space-y-5 flex flex-col items-center ">
           <h3 className="text-primary font-bold text-xl ">
             {title}
           </h3>
