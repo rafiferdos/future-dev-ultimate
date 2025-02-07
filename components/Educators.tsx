@@ -59,12 +59,12 @@ const Educators: React.FC = () => {
             spaceBetween: 50,
           },
         }}
-        className="mySwiper"
+        className="mySwiper shadow-none py-10"
       >
         {educatorsData?.length > 0 &&
           educatorsData.map((user: Educator, index: number) => (
-            <SwiperSlide key={index}>
-              <div className="flex flex-col  border border-blue-100 dark:border-blue-950 w-full justify-center mx-auto p-6 shadow-2xl rounded-xl sm:px-12">
+            <SwiperSlide key={index} className="shadow-none py-10" >
+              <div className="flex flex-col  border border-blue-100 dark:border-blue-950 w-full justify-center mx-auto p-6  rounded-xl sm:px-12">
                 <Image
                   src={user.imageURL}
                   alt={`${user.name}'s profile`}
