@@ -1,25 +1,22 @@
 import { Button } from "@nextui-org/button";
 import React from "react";
-import gettyimage from "@/public/gettyimage.png";
+import program from "@/public/home/program.webp";
 import Image from "next/image";
 
 const ProgramSection: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-24">
+    <div className="grid grid-cols-1  md:grid-cols-2  gap-24">
       {/* Left Section */}
-      <div className="relative col-span-1 lg:col-span-2">
-        <div className="bg-primary-300 dark:bg-primary-50 w-[269px] min-h-96 rounded-r-[53px]"></div>
-        <div className="absolute bottom-10">
-          <Image
-            className="max-w-96"
-            src={gettyimage}
-            alt="Program Illustration"
-          />
-        </div>
-      </div>
+      <div className="w-full  h-full">
+            <Image
+              className="rounded-3xl border border-blue-100"
+              src={program}
+              alt="Program Illustration"
+            />
+          </div>
 
       {/* Right Section */}
-      <div className="flex lg:col-span-3 pl-6 space-y-4 lg:space-y-0 md:px-0 col-span-1 flex-col justify-between">
+      <div className="flex pl-6 space-y-4 lg:space-y-0 md:px-0 col-span-1 flex-col justify-between">
         <h2 className="font-bold text-3xl lg:text-5xl">আমাদের প্রোগ্রামসমূহ</h2>
         <div className="space-y-3 font-siliguri lg:text-xl">
           <p>
