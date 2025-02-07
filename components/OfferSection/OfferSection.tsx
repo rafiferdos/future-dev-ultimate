@@ -57,7 +57,7 @@ const OfferSection: React.FC = () => {
       >
         {chunkedData.map((pair, index) => (
           <SwiperSlide key={index} className="shadow-none">
-            <div className="grid grid-rows-2 gap-4">
+            <div className="grid grid-rows-2 gap-4 ">
               {pair.map((data, subIndex) => (
                 <OfferCard key={subIndex} data={data} />
               ))}
