@@ -12,8 +12,8 @@ const ProcessCard1 = () => {
           alt="Goal"
         />
       </div>
-      <div className="col-span-3 px-6 py-10">
-        <h2 className="font-bold text-2xl ">Discover Interests & Set Goals</h2>
+      <div className="col-span-3 px-6 py-10 font-siliguri">
+        <h2 className="font-bold font-siliguri text-2xl ">Discover Interests & Set Goals</h2>
         <p>
           We help students uncover their passions in technology, arts, and
           beyond. By exploring their interests, we set personalized learning

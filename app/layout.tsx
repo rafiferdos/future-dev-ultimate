@@ -39,7 +39,7 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background text-foreground font-playpen antialiased",
+          "min-h-screen bg-background text-foreground font-siliguri  antialiased",
           fontRoboto.variable,
           fontPlaypen.variable,
           fontHindSiliguri.variable,

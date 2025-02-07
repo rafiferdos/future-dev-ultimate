@@ -5,7 +5,7 @@ import React from 'react'
 const TeamSection = () => {
   return (
     <div className="w-full bg-primary-100 dark:bg-primary-50 flex justify-between items-center rounded-3xl p-10">
-      <div className='w-2/3'>
+      <div className='w-2/3 font-siliguri'>
         <h2 className="mb-5 font-extrabold  text-5xl">
           Join Our Team
         </h2>
@@ -16,7 +16,7 @@ const TeamSection = () => {
       </div>
       <div>
         <Link href={""}>
-          <Button color="secondary" >
+          <Button color="secondary" className='font-siliguri' >
             Learn More
           </Button>
         </Link>
