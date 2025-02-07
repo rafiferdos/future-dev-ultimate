@@ -25,7 +25,7 @@ const OfferSection: React.FC = () => {
     chunkedData.push(offeringData.slice(i, i + 2));
   }
 
-  console.log(chunkedData);
+
 
   return (
     <div>
@@ -45,7 +45,7 @@ const OfferSection: React.FC = () => {
             spaceBetween: 30,
           },
           1024: {
-            slidesPerView: 4,
+            slidesPerView: 3,
             spaceBetween: 40,
           },
         }}
