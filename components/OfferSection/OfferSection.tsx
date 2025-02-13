@@ -28,7 +28,7 @@ const OfferSection: React.FC = () => {
 
 
   return (
-    <div>
+    <div className="max-w-7xl px-6 mx-auto">
       <h1 className="text-center font-bold text-3xl md:text-5xl mb-10">
         Explore our offering
       </h1>

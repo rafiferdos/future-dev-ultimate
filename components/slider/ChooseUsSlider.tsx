@@ -25,7 +25,7 @@ interface Testimonial {
 
 const ChooseUsSlider = () => {
     return (
-        <div>
+        <div className="">
           <Swiper
             effect={'creative'}
             grabCursor={true}

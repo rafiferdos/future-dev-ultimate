@@ -13,7 +13,7 @@ interface ChooseUsItem {
 
 const ChooseUsSection: React.FC = () => {
   return (
-    <div className="mt-24">
+    <div className="mt-24 max-w-7xl px-6 mx-auto">
       <h2 className="text-center mb-5 font-extrabold font-siliguri text-5xl">
         কেন আমাদের বেছে নেবেন?
       </h2>
@@ -39,7 +39,7 @@ const ChooseUsSection: React.FC = () => {
         </div>
 
         {/* Right Section */}
-        <div className="w-full lg:col-span-2">
+        <div className="w-full lg:col-span-2 ">
           <ChooseUsSlider/>
         </div>
       </div>

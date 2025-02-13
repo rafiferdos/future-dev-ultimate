@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const ProgramSection: React.FC = () => {
   return (
-    <div className="grid grid-cols-1  md:grid-cols-2  gap-24">
+    <div className="grid grid-cols-1  md:grid-cols-2  gap-24 max-w-7xl  px-6 mx-auto">
       {/* Left Section */}
       <div className="w-full  h-full">
             <Image
