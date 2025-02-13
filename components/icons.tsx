@@ -46,7 +46,7 @@ export const DiscordIcon: React.FC<IconSvgProps> = ({
 };
 
 export const TwitterIcon: React.FC<IconSvgProps> = ({
-  size = 24,
+  size = 35,
   width,
   height,
   ...props
@@ -67,7 +67,7 @@ export const TwitterIcon: React.FC<IconSvgProps> = ({
 };
 
 export const GithubIcon: React.FC<IconSvgProps> = ({
-  size = 24,
+  size = 35,
   width,
   height,
   ...props
@@ -89,7 +89,7 @@ export const GithubIcon: React.FC<IconSvgProps> = ({
   );
 };
 export const LinkedInIcon: React.FC<IconSvgProps> = ({
-  size = 24,
+  size = 35,
   width,
   height,
   ...props
@@ -128,7 +128,7 @@ export const MoonFilledIcon = ({
   </svg>
 );
 export const FacebookFilledIcon = ({
-  size = 24,
+  size = 35,
   width,
   height,
   ...props
