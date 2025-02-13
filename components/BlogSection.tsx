@@ -14,7 +14,7 @@ type Blog = {
 
 const BlogSection: React.FC = () => {
   return (
-    <div className="max-w-7xl  px-6 mx-auto">
+    <div className="max-w-7xl mt-12  px-6 mx-auto">
       <div>
         <small className="">Latest Insights</small>
         <h2 className="mb-5 mt-2 font-extrabold text-3xl lg:text-5xl">

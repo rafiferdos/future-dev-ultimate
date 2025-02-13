@@ -96,7 +96,7 @@ export default function Home() {
               <ServicesSection />
             </div>
 
-            <div className="section   ">
+            <div className="section  ">
               <TeamSection />
               <Educators />
             </div>

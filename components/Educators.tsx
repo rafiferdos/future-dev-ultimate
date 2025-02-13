@@ -20,7 +20,7 @@ type Educator = {
 
 const Educators: React.FC = () => {
   return (
-    <div className="max-w-7xl  px-6 mx-auto">
+    <div className="max-w-7xl mt-12  px-6 mx-auto">
       <div>
         <small className="">The Team</small>
         <h2 className="mb-5 mt-2 font-extrabold text-5xl">
