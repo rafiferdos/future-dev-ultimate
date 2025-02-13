@@ -15,7 +15,7 @@ type Data = {
 const PlatformSection: React.FC = () => {
   return (
     <div className="max-w-7xl px-6 mx-auto">
-      <div className="grid grid-cols-1  md:grid-cols-2  gap-24 ">
+      <div className="grid grid-cols-1 items-center  md:grid-cols-2  gap-24 ">
         {/* Left Section */}
         <div className="w-full  h-full">
             <Image
