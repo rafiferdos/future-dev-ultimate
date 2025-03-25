@@ -14,7 +14,7 @@ type Blog = {
 
 const BlogSection: React.FC = () => {
   return (
-    <div className="mt-96 md:mt-24">
+    <div className="max-w-7xl mt-12  px-6 mx-auto">
       <div>
         <small className="">Latest Insights</small>
         <h2 className="mb-5 mt-2 font-extrabold text-3xl lg:text-5xl">
@@ -43,7 +43,7 @@ const BlogSection: React.FC = () => {
           ))}
       </div>
       {/*  */}
-      <div className="flex mt-12 justify-center items-center">
+      <div className="flex my-12 justify-center items-center">
         <Button color="primary" variant="shadow">
           See More
         </Button>

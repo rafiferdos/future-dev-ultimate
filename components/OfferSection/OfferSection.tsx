@@ -8,6 +8,7 @@ import "swiper/css/bundle";
 import offeringData from "../../lib/offeringData";
 import OfferCard from "./OfferCard";
 import { Button } from "@nextui-org/button";
+import Link from "next/link";
 
 // Define a type
 type OfferingData = {
@@ -24,10 +25,10 @@ const OfferSection: React.FC = () => {
     chunkedData.push(offeringData.slice(i, i + 2));
   }
 
-  console.log(chunkedData);
+
 
   return (
-    <div>
+    <div className="max-w-7xl px-6 mx-auto">
       <h1 className="text-center font-bold text-3xl md:text-5xl mb-10">
         Explore our offering
       </h1>
@@ -44,7 +45,7 @@ const OfferSection: React.FC = () => {
             spaceBetween: 30,
           },
           1024: {
-            slidesPerView: 4,
+            slidesPerView: 3,
             spaceBetween: 40,
           },
         }}
@@ -56,8 +57,8 @@ const OfferSection: React.FC = () => {
         className="w-full"
       >
         {chunkedData.map((pair, index) => (
-          <SwiperSlide key={index} className="h-auto">
-            <div className="grid grid-rows-2 gap-4">
+          <SwiperSlide key={index} className="shadow-none">
+            <div className="grid grid-rows-2 gap-4 ">
               {pair.map((data, subIndex) => (
                 <OfferCard key={subIndex} data={data} />
               ))}
@@ -67,9 +68,11 @@ const OfferSection: React.FC = () => {
       </Swiper>
 
       <div className="flex items-center justify-center mt-10">
+        <Link href="/all-offer">
         <Button color="primary" variant="ghost">
           Learn more
         </Button>
+        </Link>
       </div>
     </div>
   );

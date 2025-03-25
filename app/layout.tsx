@@ -29,6 +29,7 @@ export const viewport: Viewport = {
   ],
 };
 
+
 export default function RootLayout({
   children,
 }: {
@@ -39,7 +40,7 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background text-foreground font-playpen antialiased",
+          "min-h-screen bg-background text-foreground font-siliguri  antialiased",
           fontRoboto.variable,
           fontPlaypen.variable,
           fontHindSiliguri.variable,
@@ -49,7 +50,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+            <main className="">
               {children}
             </main>
             <Footer />

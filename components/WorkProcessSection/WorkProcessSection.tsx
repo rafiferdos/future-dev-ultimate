@@ -15,7 +15,7 @@ type StrengthsData = {
 
 const WorkProcessSection = () => {
   return (
-    <div>
+    <div className="max-w-7xl px-6 mx-auto">
       <div className="bg-primary-200 dark:bg-primary-100 rounded-3xl relative pt-10 pb-32">
         <h2 className="text-center mb-14 font-extrabold text-3xl md:text-5xl">
           Our Work Process

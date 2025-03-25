@@ -58,10 +58,10 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal  aria-label="LinkedIn" href={siteConfig.links.linkedin}>
-            <LinkedInIcon  className="text-default-500" />
+          <Link isExternal className="mt-3"  aria-label="LinkedIn"  href={siteConfig.links.linkedin}>
+            <LinkedInIcon  className="text-default-500 " />
           </Link>
-          <Link isExternal  aria-label="LinkedIn" href={siteConfig.links.facebook}>
+          <Link isExternal  aria-label="LinkedIn" className="mt-3" href={siteConfig.links.facebook}>
             <FacebookFilledIcon  className="text-default-500" />
           </Link>
           <ThemeSwitch />

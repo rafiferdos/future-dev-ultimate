@@ -1,8 +1,9 @@
+import React from "react";
 import TestimonialsCard from "./TestimonialsCard";
 
 const Testimonials: React.FC = () => {
   return (
-    <div className="mt-24">
+    <div className="max-w-7xl px-6 mx-auto">
       <div>
         <small className="">Stories of Student</small>
         <h2 className="mt-2 mb-5 font-extrabold  text-5xl">
@@ -10,7 +11,7 @@ const Testimonials: React.FC = () => {
         </h2>
       </div>
       <section>
-        <div className="flex flex-col justify-center lg:flex-row lg:justify-between">
+        <div className="flex flex-col justify-center gap-3 lg:flex-row lg:justify-between">
           <div className="flex items-center justify-center">
             <div>
               <p>

@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/button";
 import React from "react";
-import gettyimage from "@/public/chooseUse.png";
+// import gettyimage from "@/public/chooseUse.png";
+import learning from "@/public/home/learning.webp";
 import Image from "next/image";
 import Link from "next/link";
 import data from "../lib/data";
@@ -13,22 +14,19 @@ type Data = {
 
 const PlatformSection: React.FC = () => {
   return (
-    <>
-      <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-24">
+    <div className="max-w-7xl px-6 mx-auto">
+      <div className="grid grid-cols-1 items-center  md:grid-cols-2  gap-24 ">
         {/* Left Section */}
-        <div className="relative col-span-1 lg:col-span-2">
-          <div className="bg-primary w-[269px] min-h-96 rounded-r-[53px]" />
-          <div className="absolute bottom-36">
+        <div className="w-full  h-full">
             <Image
-              className="max-w-80"
-              src={gettyimage}
+              className="rounded-3xl border border-blue-100"
+              src={learning}
               alt="Program Illustration"
             />
           </div>
-        </div>
 
         {/* Right Section */}
-        <div className="flex lg:col-span-3 pl-6 space-y-4 lg:space-y-5 md:px-0 col-span-1 flex-col justify-between">
+        <div className="flex  pl-6 space-y-4 lg:space-y-5 md:px-0 col-span-1 flex-col justify-between">
           <div>
             <h4 className="font-siliguri">আরো দেখুন</h4>
             <h2 className="mb-5 mt-2 font-extrabold font-siliguri text-5xl">
@@ -36,7 +34,7 @@ const PlatformSection: React.FC = () => {
             </h2>
           </div>
           <div className="space-y-2 lg:text-xl">
-            <p className="font-atma">
+            <p className="font-siliguri">
               আমাদের প্ল্যাটফর্ম একটি আধুনিক ও উদ্ভাবনী শিক্ষা ব্যবস্থা যা
               শিশুদের দক্ষতা বৃদ্ধির জন্য বিশেষভাবে ডিজাইন করা হয়েছে। আমরা
               বিশ্বাস করি, শেখার প্রক্রিয়া হওয়া উচিত মজার, বাস্তবভিত্তিক এবং
@@ -44,7 +42,7 @@ const PlatformSection: React.FC = () => {
               বিষয়ে হাতে-কলমে শিক্ষার মাধ্যমে আমরা শিশুদের প্রযুক্তিগত এবং
               সৃজনশীল দক্ষতা গড়ে তুলতে সাহায্য করি।
             </p>
-            <p className="font-atma">
+            <p className="font-siliguri">
               আমাদের লক্ষ্য হলো একটি এমন
               শিক্ষার পরিবেশ তৈরি করা যেখানে শিশুরা তাদের কৌতূহল এবং
               কল্পনাশক্তিকে কাজে লাগিয়ে নতুন কিছু শিখতে এবং উদ্ভাবন করতে পারে।
@@ -74,7 +72,7 @@ const PlatformSection: React.FC = () => {
             </div>
           ))}
       </div>
-    </>
+    </div>
   );
 };
 

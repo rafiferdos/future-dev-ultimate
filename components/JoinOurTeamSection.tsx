@@ -7,7 +7,7 @@ import { CiMail } from "react-icons/ci";
 
 const JoinOurTeamSection = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center border p-10 border-primary rounded-3xl">
+    <div className="grid mx-5 grid-cols-1 max-w-7xl  px-6 lg:mx-auto md:grid-cols-2 gap-10 items-center border p-10 border-primary rounded-3xl">
       <div className="space-y-3 ">
         <h2 className="mb-5 mt-2 font-extrabold text-3xl lg:text-5xl">
           Join Our Team

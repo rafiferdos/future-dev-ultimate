@@ -2,7 +2,7 @@
 
 import { Button } from "@nextui-org/button";
 import React from "react";
-import service from "@/public/service.png";
+import service from "@/public/home/service.webp";
 import Image from "next/image";
 import servicesData from "../../lib/servicesData";
 import ServiceCard from "./ServiceCard";
@@ -17,23 +17,20 @@ type ServiceData = {
 
 const ServicesSection: React.FC = () => {
   return (
-    <div>
-      <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-24">
+    <div className="max-w-7xl  px-6 mx-auto">
+      <div className="grid grid-cols-1  md:grid-cols-2  gap-24">
         {/* Left Section */}
-        <div className="relative col-span-1 lg:col-span-2">
-          <div className="bg-primary w-[269px] min-h-96 rounded-r-[53px]"></div>
-          <div className="absolute bottom-10">
+        <div className="w-full  h-full">
             <Image
-              className="max-w-96"
+              className="rounded-3xl border border-blue-100"
               src={service}
               alt="Program Illustration"
             />
           </div>
-        </div>
 
         {/* Right Section */}
-        <div className="flex lg:col-span-3 pl-6 space-y-10 lg:space-y-0 md:px-0 col-span-1 flex-col justify-center ">
-          <h2 className="font-bold text-3xl lg:text-5xl">
+        <div className="flex font-siliguri gap-6  pl-6 space-y-10 lg:space-y-0 md:px-0 col-span-1 flex-col justify-center ">
+          <h2 className="font-bold text-3xl mt-5 lg:text-5xl">
             Explore Our Services
           </h2>
           <div className="space-y-1  lg:text-xl">

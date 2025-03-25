@@ -20,7 +20,7 @@ type Educator = {
 
 const Educators: React.FC = () => {
   return (
-    <div className="mt-96 md:mt-24">
+    <div className="max-w-7xl mt-12  px-6 mx-auto">
       <div>
         <small className="">The Team</small>
         <h2 className="mb-5 mt-2 font-extrabold text-5xl">
@@ -59,12 +59,12 @@ const Educators: React.FC = () => {
             spaceBetween: 50,
           },
         }}
-        className="mySwiper"
+        className="mySwiper shadow-none py-10"
       >
         {educatorsData?.length > 0 &&
           educatorsData.map((user: Educator, index: number) => (
-            <SwiperSlide key={index}>
-              <div className="flex flex-col  border border-blue-100 dark:border-blue-950 w-full justify-center mx-auto p-6 shadow-2xl rounded-xl sm:px-12">
+            <SwiperSlide key={index} className="shadow-none py-10" >
+              <div className="flex flex-col  border border-blue-100 dark:border-blue-950 w-full justify-center mx-auto p-6  rounded-xl sm:px-12">
                 <Image
                   src={user.imageURL}
                   alt={`${user.name}'s profile`}

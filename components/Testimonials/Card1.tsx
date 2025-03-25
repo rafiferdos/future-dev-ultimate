@@ -38,7 +38,7 @@ const Card1: React.FC<{ user: User }> = ({ user }) => {
 
   return (
     <div className="w-full">
-      <Card className="p-5 border border-primary">
+      <Card className="p-5 mr-5 border border-primary">
         <CardHeader className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar isBordered color="primary" src={image} />

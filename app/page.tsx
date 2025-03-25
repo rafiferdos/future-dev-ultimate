@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
@@ -18,90 +19,139 @@ import BlogSection from "@/components/BlogSection";
 import JoinOurTeamSection from "@/components/JoinOurTeamSection";
 import WorkProcessSection from "@/components/WorkProcessSection/WorkProcessSection";
 import OfferSection from "@/components/OfferSection/OfferSection";
+import Banner from "@/components/banner/Banner";
 
+import ReactFullpage from "@fullpage/react-fullpage";
+import program from "@/public/home/program.webp";
+import learning from "@/public/home/learning.webp";
+import service from "@/public/home/service.webp";
+import Footer from "@/components/Footer";
 export default function Home() {
   return (
-    <div className="space-y-24">
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 font-siliguri">
-        <div className="inline-block max-w-xl text-center justify-center">
-          <span className={title()}>আপনার সন্তানকে&nbsp;</span>
-          <span className={title({ color: "violet" })}>
-            মেশিন লার্নিং&nbsp;
-          </span>
-          <br />
-          <span className={title()}>শিক্ষা দিন আগামী দিনের জন্য</span>
-          <div className={subtitle({ class: "mt-4 font-playpen" })}>
-            Make them future-ready with our courses and events.
-          </div>
-        </div>
+    <div className="banner">
+      <ReactFullpage
+        licenseKey="YOUR_LICENSE_KEY" // Replace with a valid key
+        scrollingSpeed={1000} // Adjust scrolling speed if needed
+        navigation
+        slidesNavigation={true}
+        controlArrows={false}
+        render={() => (
+          <ReactFullpage.Wrapper>
+            <div
+              className="section h-screen flex flex-col justify-center items-center text-center text-white bg-cover bg-center"
+              style={{ backgroundImage: `url(${program.src})` }}
+            >
+              <h1 className="text-[calc(2em+2vw)] m-0 ">ব্যতিক্রমী শিক্ষা</h1>
+              <p className="w-1/2 mx-auto my-2 text-[1.65em]">
+                আমাদের কোর্সগুলো বিশেষভাবে ডিজাইন করা, যাতে শিশুরা মজা করে নতুন
+                জিনিস শিখতে পারে
+              </p>
+            </div>
+            <div
+              className="section h-screen flex flex-col justify-center items-center text-center text-white bg-cover bg-center"
+              style={{ backgroundImage: `url(${learning.src})` }}
+            >
+              <h1 className="text-[calc(2em+2vw)] m-0 ">
+                গবেষণামূলক কার্যক্রম
+              </h1>
+              <p className="w-1/2 mx-auto my-2 text-[1.65em]">
+                {" "}
+                শিশুরা নতুন সমস্যার সমাধান করতে শেখে, যা তাদের সৃজনশীলতাকে আরো
+                উজ্জীবিত করে
+              </p>
+            </div>
+            <div
+              className="section h-screen flex flex-col justify-center items-center text-center text-white bg-cover bg-center"
+              style={{ backgroundImage: `url(${service.src})` }}
+            >
+              <h1 className="text-[calc(2em+2vw)] m-0 ">
+                গবেষণামূলক কার্যক্রম
+              </h1>
+              <p className="w-1/2 mx-auto my-2 text-[1.65em]">
+                শিশুরা নতুন সমস্যার সমাধান করতে শেখে, যা তাদের সৃজনশীলতাকে আরো
+                উজ্জীবিত করে
+              </p>
+            </div>
+            <div className="section  mt-20">
+              <ProgramSection />
+              <ChooseUsSection />
+            </div>
+            <div className="section  ">
+              <ChooseUsSection />
+            </div>
 
-        <div className="flex gap-3">
-          <Link
-            isExternal
-            className={buttonStyles({
-              color: "primary",
-              radius: "full",
-              variant: "shadow",
-            })}
-            href={siteConfig.links.docs}
-          >
-            Explore More
-          </Link>
-          <Link
-            isExternal
-            className={buttonStyles({ variant: "bordered", radius: "full" })}
-            href={siteConfig.links.github}
-          >
-            <GithubIcon size={20} />
-            GitHub
-          </Link>
-          <Button color="danger" variant="shadow" radius="full">
-            Click me
-          </Button>
-        </div>
+            <div className="section  ">
+              <OfferSection />
+            </div>
 
-        <div className="mt-8">
-          <Snippet hideCopyButton hideSymbol variant="bordered">
-            <span>
-              Get started by editing <Code color="primary">app/page.tsx</Code>
-            </span>
-          </Snippet>
-        </div>
-      </section>
-      {/* Program Section */}
-      <ProgramSection />
+            <div className="section  ">
+              <PlatformSection />
+            </div>
 
+            <div className="section  ">
+              <WorkProcessSection />
+            </div>
 
-      {/* Why Choose us */}
-      <ChooseUsSection />
+            <div className="section ">
+              <ServicesSection />
+            </div>
 
-      {/* Explore our offering */}
-      <OfferSection />
+            <div className="section  ">
+              <TeamSection />
+              <Educators />
+            </div>
 
-      {/*About Our Educational Platform  */}
-      <PlatformSection />
+            <div className="section  ">
+              <Testimonials />
+              <BlogSection />
+            </div>
 
-      {/* Our Work Process */}
-      <WorkProcessSection />
-
-      {/* Explore Our Services */}
-      <ServicesSection />
-
-      {/* Join Our Team */}
-      <TeamSection />
-
-      {/* Our  Educators  */}
-      <Educators />
-
-      {/* Testimonials */}
-      <Testimonials />
-
-      {/*Our Blog Insights */}
-      <BlogSection />
-
-      
-      {/* Join Our Team Section */}
-      <JoinOurTeamSection />
+            <div className="section ">
+              <JoinOurTeamSection />
+              <Footer />
+            </div>
+          </ReactFullpage.Wrapper>
+        )}
+      />
     </div>
+    // <div className="font-siliguri">
+    //   <div className="relative">
+    //     <Banner />
+    //   </div>
+
+    // <div className="mx-auto max-w-7xl pt-16 px-6 flex-grow">
+    //   <ProgramSection />
+
+    //   {/* Why Choose us */}
+    //   <ChooseUsSection />
+
+    //   {/* Explore our offering */}
+    //   <OfferSection />
+
+    //   {/*About Our Educational Platform  */}
+    //   <PlatformSection />
+
+    //   {/* Our Work Process */}
+    //   <WorkProcessSection />
+
+    //   {/* Explore Our Services */}
+    //   <ServicesSection />
+
+    //   {/* Join Our Team */}
+    //   <TeamSection />
+
+    //   {/* Our  Educators  */}
+    //   <Educators />
+
+    //   {/* Testimonials */}
+    //   <Testimonials />
+
+    //   {/*Our Blog Insights */}
+    //   <BlogSection />
+
+    //   {/* Join Our Team Section */}
+    //   <JoinOurTeamSection />
+    // </div>
+    // </div>
   );
 }
