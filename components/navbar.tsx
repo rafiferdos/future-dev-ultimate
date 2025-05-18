@@ -25,8 +25,10 @@ import {
 } from "react-icons/fa";
 import { IoCode, IoGameController, IoRocket, IoStar } from "react-icons/io5";
 
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
+import { useLanguage } from "@/context/LanguageContext";
 import Logo from "@/public/logo.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -36,6 +38,7 @@ export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [hoverButton, setHoverButton] = useState<string | null>(null);
   const pathname = usePathname();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -178,7 +181,7 @@ export const Navbar = () => {
                     }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   >
-                    Code
+                    {language === "en" ? "Code" : "কোড"}
                   </motion.span>
                   <motion.span
                     className="text-yellow-300"
@@ -191,7 +194,7 @@ export const Navbar = () => {
                     }}
                     transition={{ duration: 2.5, delay: 0.5, repeat: Infinity }}
                   >
-                    Py
+                    {language === "en" ? "Py" : "পাই"}
                   </motion.span>
                 </motion.p>
                 <motion.p
@@ -200,7 +203,7 @@ export const Navbar = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
                 >
-                  Code Adventures for Youngers
+                  {t("siteTagline", "")}
                 </motion.p>
               </div>
             </NextLink>
@@ -211,6 +214,9 @@ export const Navbar = () => {
         <div className="hidden lg:flex gap-1 justify-start ml-8">
           {siteConfig.navItems.map((item, i) => {
             const isActive = pathname === item.href;
+
+            // Translate navigation items
+            const itemLabel = t("navItems", item.label.toLowerCase());
 
             return (
               <motion.div
@@ -265,7 +271,7 @@ export const Navbar = () => {
                         {navIcons[item.href as keyof typeof navIcons]}
                       </motion.div>
 
-                      {item.label}
+                      {itemLabel}
 
                       {/* Active indicator with animation */}
                       {isActive && (
@@ -298,7 +304,10 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-3">
-          {/* Fun animated theme switch */}
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
+          {/* Theme Switch */}
           <motion.div
             whileHover={{
               rotate: 360,
@@ -359,7 +368,8 @@ export const Navbar = () => {
               </AnimatePresence>
 
               <motion.div className="flex items-center gap-1.5">
-                <FaRobot className="text-cyan-200" /> Parent Access
+                <FaRobot className="text-cyan-200" />{" "}
+                {t("auth", "parentAccess")}
               </motion.div>
             </Button>
           </motion.div>
@@ -405,7 +415,7 @@ export const Navbar = () => {
                 </motion.div>
               }
             >
-              Start Coding Adventure
+              {t("auth", "register")}
               {/* Animated particles on hover */}
               <AnimatePresence>
                 {hoverButton === "register" && (
@@ -466,7 +476,7 @@ export const Navbar = () => {
                 </motion.div>
               }
             >
-              Launch Console
+              {t("auth", "login")}
               {/* Animated trail on hover */}
               <AnimatePresence>
                 {hoverButton === "login" && (
@@ -499,6 +509,9 @@ export const Navbar = () => {
       {/* Mobile menu toggle */}
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <div className="flex items-center gap-2">
+          {/* Language Switcher for Mobile */}
+          <LanguageSwitcher />
+
           <motion.div
             whileHover={{ rotate: 360, scale: 1.1 }}
             transition={{ duration: 0.6 }}
@@ -537,33 +550,6 @@ export const Navbar = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <NavbarMenu className="pt-16 pb-10 bg-gradient-to-b from-blue-800/97 via-blue-700/97 to-indigo-800/97">
-            {/* Background decorations */}
-            <motion.div
-              className="absolute top-0 left-0 right-0 h-24 overflow-hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className="absolute h-40 w-40 rounded-full bg-blue-400/20 blur-xl"
-                style={{ top: "-10%", left: "10%" }}
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{ duration: 5, repeat: Infinity }}
-              />
-              <motion.div
-                className="absolute h-32 w-32 rounded-full bg-cyan-400/20 blur-xl"
-                style={{ top: "-5%", right: "20%" }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.2, 0.5, 0.2],
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-              />
-            </motion.div>
-
             {/* Navigation items with improved animations */}
             <motion.div
               className="flex flex-col gap-2 px-4 relative"
@@ -572,61 +558,66 @@ export const Navbar = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {siteConfig.navItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: index * 0.07 }}
-                  className="overflow-hidden"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.03, x: 5 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <NavbarMenuItem>
-                      <NextLink
-                        href={item.href}
-                        className={clsx(
-                          "flex items-center gap-3 w-full px-5 py-4 rounded-xl",
-                          pathname === item.href
-                            ? "bg-blue-600/30 text-white shadow-inner border border-blue-400/20"
-                            : "text-white hover:bg-blue-600/20"
-                        )}
-                      >
-                        <motion.div
-                          animate={{
-                            rotate:
-                              pathname === item.href ? [0, 10, -10, 0] : 0,
-                          }}
-                          transition={{
-                            duration: 3,
-                            repeat: pathname === item.href ? Infinity : 0,
-                          }}
-                        >
-                          {navIcons[item.href as keyof typeof navIcons]}
-                        </motion.div>
-                        <span className="font-medium">{item.label}</span>
+              {siteConfig.navItems.map((item, index) => {
+                // Translate navigation items for mobile
+                const itemLabel = t("navItems", item.label.toLowerCase());
 
-                        {/* Show indicator for active page */}
-                        {pathname === item.href && (
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ delay: index * 0.07 }}
+                    className="overflow-hidden"
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.03, x: 5 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <NavbarMenuItem>
+                        <NextLink
+                          href={item.href}
+                          className={clsx(
+                            "flex items-center gap-3 w-full px-5 py-4 rounded-xl",
+                            pathname === item.href
+                              ? "bg-blue-600/30 text-white shadow-inner border border-blue-400/20"
+                              : "text-white hover:bg-blue-600/20"
+                          )}
+                        >
                           <motion.div
-                            className="ml-auto"
                             animate={{
-                              scale: [1, 1.2, 1],
-                              rotate: [0, 180, 360],
+                              rotate:
+                                pathname === item.href ? [0, 10, -10, 0] : 0,
                             }}
-                            transition={{ duration: 4, repeat: Infinity }}
+                            transition={{
+                              duration: 3,
+                              repeat: pathname === item.href ? Infinity : 0,
+                            }}
                           >
-                            <IoStar className="text-yellow-300" />
+                            {navIcons[item.href as keyof typeof navIcons]}
                           </motion.div>
-                        )}
-                      </NextLink>
-                    </NavbarMenuItem>
+                          <span className="font-medium">{itemLabel}</span>
+
+                          {/* Show indicator for active page */}
+                          {pathname === item.href && (
+                            <motion.div
+                              className="ml-auto"
+                              animate={{
+                                scale: [1, 1.2, 1],
+                                rotate: [0, 180, 360],
+                              }}
+                              transition={{ duration: 4, repeat: Infinity }}
+                            >
+                              <IoStar className="text-yellow-300" />
+                            </motion.div>
+                          )}
+                        </NextLink>
+                      </NavbarMenuItem>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
 
             {/* Action buttons with animation */}
@@ -665,7 +656,7 @@ export const Navbar = () => {
                   </motion.div>
                 }
               >
-                Start Coding Adventure
+                {t("auth", "register")}
               </Button>
 
               <Button
@@ -683,7 +674,7 @@ export const Navbar = () => {
                   </motion.div>
                 }
               >
-                Launch Console
+                {t("auth", "login")}
               </Button>
 
               <Button
@@ -695,37 +686,9 @@ export const Navbar = () => {
                 size="lg"
                 startContent={<FaRobot className="text-cyan-200" />}
               >
-                Parent Access
+                {t("auth", "parentAccess")}
               </Button>
             </motion.div>
-
-            {/* Decorative particles in mobile menu */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(8)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute text-cyan-200"
-                  style={{
-                    top: `${20 + Math.random() * 60}%`,
-                    left: `${Math.random() * 90}%`,
-                    fontSize: `${Math.random() * 10 + 6}px`,
-                    opacity: 0.5 + Math.random() * 0.5,
-                  }}
-                  animate={{
-                    y: [0, -10, 0],
-                    opacity: [0.3, 0.7, 0.3],
-                    rotate: i % 2 === 0 ? [0, 180] : [180, 0],
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 5,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                >
-                  {i % 3 === 0 ? "●" : i % 3 === 1 ? "✦" : "■"}
-                </motion.div>
-              ))}
-            </div>
 
             {/* Footer credits in mobile menu */}
             <motion.div
@@ -735,50 +698,11 @@ export const Navbar = () => {
               exit={{ opacity: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <p>CodePy - Where Python Adventures Begin</p>
+              <p>{t("mobileFooter", "")}</p>
             </motion.div>
           </NavbarMenu>
         )}
       </AnimatePresence>
-
-      {/* Code particles floating in desktop navbar */}
-      <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => {
-          const symbol =
-            i % 5 === 0
-              ? "{"
-              : i % 5 === 1
-                ? "}"
-                : i % 5 === 2
-                  ? "<>"
-                  : i % 5 === 3
-                    ? "()"
-                    : "//";
-          return (
-            <motion.div
-              key={i}
-              className="absolute text-blue-300/20 font-mono"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 8 + 4}px`,
-              }}
-              animate={{
-                y: [0, -5, 0],
-                opacity: [0.2, 0.5, 0.2],
-                rotate: i % 2 === 0 ? 0 : 180,
-              }}
-              transition={{
-                duration: 2 + Math.random() * 3,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              {symbol}
-            </motion.div>
-          );
-        })}
-      </div>
     </NextUINavbar>
   );
 };
