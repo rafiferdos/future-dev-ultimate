@@ -1,13 +1,5 @@
 "use client";
 import React from "react";
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
-import { Button } from "@nextui-org/button";
 import Educators from "@/components/Educators";
 import Testimonials from "@/components/Testimonials/Testimonials";
 import ChooseUsSection from "@/components/ChooseUsSection";
@@ -19,7 +11,6 @@ import BlogSection from "@/components/BlogSection";
 import JoinOurTeamSection from "@/components/JoinOurTeamSection";
 import WorkProcessSection from "@/components/WorkProcessSection/WorkProcessSection";
 import OfferSection from "@/components/OfferSection/OfferSection";
-import Banner from "@/components/banner/Banner";
 
 import ReactFullpage from "@fullpage/react-fullpage";
 import program from "@/public/home/program.webp";
@@ -35,6 +26,7 @@ export default function Home() {
         navigation
         slidesNavigation={true}
         controlArrows={false}
+        credits={{ enabled: true, label: 'Made with fullPage.js', position: 'right' }}
         render={() => (
           <ReactFullpage.Wrapper>
             <div
