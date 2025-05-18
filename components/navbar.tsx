@@ -23,6 +23,7 @@ import {
   FaSpaceShuttle,
   FaUserAstronaut,
 } from "react-icons/fa";
+import { HiMoon, HiSun } from "react-icons/hi2";
 import { IoCode, IoGameController, IoRocket, IoStar } from "react-icons/io5";
 
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -32,6 +33,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import Logo from "@/public/logo.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +41,7 @@ export const Navbar = () => {
   const [hoverButton, setHoverButton] = useState<string | null>(null);
   const pathname = usePathname();
   const { language, t } = useLanguage();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,14 +81,21 @@ export const Navbar = () => {
       className={clsx(
         "transition-all duration-500 py-3 z-50",
         scrolled
-          ? "bg-gradient-to-r from-blue-700/95 via-blue-600/95 to-indigo-700/95 shadow-lg shadow-blue-800/20"
-          : "bg-gradient-to-r from-blue-700/80 via-blue-600/80 to-indigo-700/80"
+          ? theme === "dark"
+            ? "bg-gradient-to-r from-blue-950/95 via-indigo-950/95 to-blue-900/95 shadow-lg shadow-blue-900/30"
+            : "bg-gradient-to-r from-white/90 via-blue-50/90 to-indigo-50/90 shadow-lg shadow-blue-200/30 border-b border-blue-100"
+          : theme === "dark"
+            ? "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80"
+            : "bg-gradient-to-r from-white/80 via-blue-50/80 to-indigo-50/80 backdrop-blur-sm"
       )}
     >
-      {/* Animated decorative elements */}
+      {/* Animated decorative elements - theme aware */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute h-14 w-14 rounded-full bg-cyan-400/10 blur-xl"
+          className={clsx(
+            "absolute h-14 w-14 rounded-full blur-xl",
+            theme === "dark" ? "bg-cyan-400/10" : "bg-cyan-500/5"
+          )}
           style={{ top: "10%", left: "5%" }}
           animate={{
             scale: [1, 1.5, 1],
@@ -94,7 +104,10 @@ export const Navbar = () => {
           transition={{ duration: 7, repeat: Infinity }}
         />
         <motion.div
-          className="absolute h-20 w-20 rounded-full bg-blue-300/10 blur-xl"
+          className={clsx(
+            "absolute h-20 w-20 rounded-full blur-xl",
+            theme === "dark" ? "bg-blue-300/10" : "bg-blue-400/5"
+          )}
           style={{ top: "60%", left: "20%" }}
           animate={{
             scale: [1, 1.3, 1],
@@ -103,7 +116,10 @@ export const Navbar = () => {
           transition={{ duration: 5, repeat: Infinity }}
         />
         <motion.div
-          className="absolute h-16 w-16 rounded-full bg-indigo-400/10 blur-xl"
+          className={clsx(
+            "absolute h-16 w-16 rounded-full blur-xl",
+            theme === "dark" ? "bg-indigo-400/10" : "bg-indigo-500/5"
+          )}
           style={{ top: "30%", right: "10%" }}
           animate={{
             scale: [1, 1.4, 1],
@@ -113,7 +129,7 @@ export const Navbar = () => {
         />
       </div>
 
-      {/* Logo and brand */}
+      {/* Logo and brand - theme aware */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <motion.div
@@ -127,14 +143,25 @@ export const Navbar = () => {
             >
               <div className="relative">
                 <motion.div
-                  className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 opacity-70 blur-sm"
+                  className={clsx(
+                    "absolute -inset-1 rounded-full bg-gradient-to-r blur-sm",
+                    theme === "dark"
+                      ? "from-cyan-400 to-blue-500 opacity-70"
+                      : "from-cyan-300 to-blue-400 opacity-60"
+                  )}
                   animate={{
                     scale: [1, 1.1, 1],
-                    opacity: [0.5, 0.7, 0.5],
+                    opacity:
+                      theme === "dark" ? [0.5, 0.7, 0.5] : [0.4, 0.6, 0.4],
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 />
-                <div className="relative bg-blue-800 rounded-full p-1.5">
+                <div
+                  className={clsx(
+                    "relative rounded-full p-1.5",
+                    theme === "dark" ? "bg-blue-800" : "bg-white shadow-inner"
+                  )}
+                >
                   <Image
                     alt="CodePy logo"
                     className="w-10 h-10 rounded-full"
@@ -144,7 +171,12 @@ export const Navbar = () => {
 
                 {/* Orbiting Python logo */}
                 <motion.div
-                  className="absolute -top-1 -right-1 bg-yellow-400 text-blue-900 rounded-full p-0.5 shadow-lg border-2 border-blue-900/30 z-10"
+                  className={clsx(
+                    "absolute -top-1 -right-1 rounded-full p-0.5 shadow-lg z-10 border-2",
+                    theme === "dark"
+                      ? "bg-yellow-400 text-blue-900 border-blue-900/30"
+                      : "bg-yellow-400 text-blue-700 border-blue-700/30"
+                  )}
                   animate={{
                     rotate: [0, 360],
                   }}
@@ -165,32 +197,53 @@ export const Navbar = () => {
 
               <div>
                 <motion.p
-                  className="font-bold text-white text-2xl tracking-tight leading-none"
+                  className={clsx(
+                    "font-bold text-2xl tracking-tight leading-none",
+                    theme === "dark" ? "text-white" : "text-blue-900"
+                  )}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
                 >
                   <motion.span
-                    className="text-cyan-300"
+                    className={
+                      theme === "dark" ? "text-cyan-300" : "text-cyan-600"
+                    }
                     animate={{
-                      textShadow: [
-                        "0 0 8px rgba(103,232,249,0)",
-                        "0 0 15px rgba(103,232,249,0.5)",
-                        "0 0 8px rgba(103,232,249,0)",
-                      ],
+                      textShadow:
+                        theme === "dark"
+                          ? [
+                              "0 0 8px rgba(103,232,249,0)",
+                              "0 0 15px rgba(103,232,249,0.5)",
+                              "0 0 8px rgba(103,232,249,0)",
+                            ]
+                          : [
+                              "0 0 8px rgba(8,145,178,0)",
+                              "0 0 15px rgba(8,145,178,0.3)",
+                              "0 0 8px rgba(8,145,178,0)",
+                            ],
                     }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   >
                     {language === "en" ? "Code" : "কোড"}
                   </motion.span>
                   <motion.span
-                    className="text-yellow-300"
+                    className={
+                      theme === "dark" ? "text-yellow-300" : "text-yellow-500"
+                    }
                     animate={{
-                      textShadow: [
-                        "0 0 8px rgba(250,204,21,0)",
-                        "0 0 15px rgba(250,204,21,0.5)",
-                        "0 0 8px rgba(250,204,21,0)",
-                      ],
+                      textShadow:
+                        theme === "dark"
+                          ? [
+                              "0 0 8px rgba(250,204,21,0)",
+                              "0 0 15px rgba(250,204,21,0.5)",
+                              "0 0 8px rgba(250,204,21,0)",
+                            ]
+                          : [
+                              "0 0 8px rgba(234,179,8,0)",
+                              "0 0 15px rgba(234,179,8,0.3)",
+                              "0 0 8px rgba(234,179,8,0)",
+                            ],
                     }}
                     transition={{ duration: 2.5, delay: 0.5, repeat: Infinity }}
                   >
@@ -198,7 +251,10 @@ export const Navbar = () => {
                   </motion.span>
                 </motion.p>
                 <motion.p
-                  className="text-xs text-blue-200 leading-none"
+                  className={clsx(
+                    "text-xs leading-none",
+                    theme === "dark" ? "text-blue-200" : "text-blue-700"
+                  )}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
@@ -210,7 +266,7 @@ export const Navbar = () => {
           </motion.div>
         </NavbarBrand>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - theme aware */}
         <div className="hidden lg:flex gap-1 justify-start ml-8">
           {siteConfig.navItems.map((item, i) => {
             const isActive = pathname === item.href;
@@ -243,21 +299,37 @@ export const Navbar = () => {
                       className={clsx(
                         "px-4 py-2 rounded-full flex items-center gap-2 transition-all relative",
                         isActive
-                          ? "bg-white/15 text-white font-medium"
-                          : "text-white/90 hover:bg-white/10"
+                          ? theme === "dark"
+                            ? "bg-white/15 text-white font-medium"
+                            : "bg-blue-100 text-blue-800 font-medium"
+                          : theme === "dark"
+                            ? "text-white/90 hover:bg-white/10"
+                            : "text-blue-800 hover:bg-blue-50"
                       )}
                       href={item.href}
                     >
                       {/* Animated background for active item */}
                       {isActive && (
                         <motion.div
-                          className="absolute inset-0 rounded-full bg-blue-500/20 -z-10"
+                          className={clsx(
+                            "absolute inset-0 rounded-full -z-10",
+                            theme === "dark"
+                              ? "bg-blue-500/20"
+                              : "bg-blue-200/70"
+                          )}
                           animate={{
-                            boxShadow: [
-                              "0 0 0 0 rgba(59, 130, 246, 0)",
-                              "0 0 0 5px rgba(59, 130, 246, 0.3)",
-                              "0 0 0 0 rgba(59, 130, 246, 0)",
-                            ],
+                            boxShadow:
+                              theme === "dark"
+                                ? [
+                                    "0 0 0 0 rgba(59, 130, 246, 0)",
+                                    "0 0 0 5px rgba(59, 130, 246, 0.3)",
+                                    "0 0 0 0 rgba(59, 130, 246, 0)",
+                                  ]
+                                : [
+                                    "0 0 0 0 rgba(147, 197, 253, 0)",
+                                    "0 0 0 5px rgba(147, 197, 253, 0.3)",
+                                    "0 0 0 0 rgba(147, 197, 253, 0)",
+                                  ],
                           }}
                           transition={{ duration: 2.5, repeat: Infinity }}
                         />
@@ -298,7 +370,7 @@ export const Navbar = () => {
         </div>
       </NavbarContent>
 
-      {/* Right-side controls - Desktop */}
+      {/* Right-side controls - Desktop with improved theme toggle */}
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
@@ -307,18 +379,66 @@ export const Navbar = () => {
           {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Theme Switch */}
+          {/* Enhanced Theme Toggle */}
           <motion.div
-            whileHover={{
-              rotate: 360,
-              scale: 1.2,
-            }}
-            transition={{ duration: 0.6 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative"
           >
-            <ThemeSwitch />
+            <div
+              className={clsx(
+                "relative overflow-hidden rounded-full p-1.5 flex items-center justify-center",
+                theme === "dark"
+                  ? "bg-blue-800/80 border border-blue-700"
+                  : "bg-white shadow-inner border border-blue-200"
+              )}
+            >
+              <motion.div
+                className="absolute inset-0 opacity-50"
+                animate={{
+                  background:
+                    theme === "dark"
+                      ? [
+                          "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                          "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                          "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                        ]
+                      : [
+                          "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                          "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                          "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                        ],
+                }}
+                transition={{ duration: 5, repeat: Infinity }}
+              />
+              <AnimatePresence mode="wait">
+                {theme === "dark" ? (
+                  <motion.div
+                    key="moon"
+                    initial={{ rotate: -30, opacity: 0, scale: 0.5 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <HiMoon className="w-5 h-5 text-cyan-300" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="sun"
+                    initial={{ rotate: 30, opacity: 0, scale: 0.5 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: -30, opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <HiSun className="w-5 h-5 text-yellow-500" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+            </div>
           </motion.div>
 
-          {/* Parent portal button */}
+          {/* Parent portal button - theme aware */}
           <motion.div
             whileHover={{
               scale: 1.05,
@@ -331,7 +451,12 @@ export const Navbar = () => {
             <Button
               as={Link}
               href="/parent-portal"
-              className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white border-0 shadow-md relative overflow-hidden"
+              className={clsx(
+                "border-0 shadow-md relative overflow-hidden",
+                theme === "dark"
+                  ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white"
+                  : "bg-gradient-to-r from-teal-400 to-cyan-500 text-white"
+              )}
               radius="full"
               size="sm"
             >
@@ -342,7 +467,10 @@ export const Navbar = () => {
                     {[...Array(3)].map((_, i) => (
                       <motion.div
                         key={`parent-particle-${i}`}
-                        className="absolute w-2 h-2 rounded-full bg-cyan-200"
+                        className={clsx(
+                          "absolute w-2 h-2 rounded-full",
+                          theme === "dark" ? "bg-cyan-200" : "bg-cyan-100"
+                        )}
                         initial={{
                           opacity: 0,
                           scale: 0,
@@ -368,14 +496,18 @@ export const Navbar = () => {
               </AnimatePresence>
 
               <motion.div className="flex items-center gap-1.5">
-                <FaRobot className="text-cyan-200" />{" "}
+                <FaRobot
+                  className={
+                    theme === "dark" ? "text-cyan-200" : "text-cyan-100"
+                  }
+                />{" "}
                 {t("auth", "parentAccess")}
               </motion.div>
             </Button>
           </motion.div>
         </NavbarItem>
 
-        {/* Registration button with animation */}
+        {/* Registration button with animation - theme aware */}
         <NavbarItem className="hidden md:flex">
           <motion.div
             whileHover={{
@@ -389,7 +521,12 @@ export const Navbar = () => {
           >
             {/* Button glow effect */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-md -z-10"
+              className={clsx(
+                "absolute inset-0 rounded-full blur-md -z-10",
+                theme === "dark"
+                  ? "bg-gradient-to-r from-cyan-400 to-blue-500"
+                  : "bg-gradient-to-r from-cyan-300 to-blue-400"
+              )}
               animate={{
                 opacity: [0.5, 0.8, 0.5],
                 scale: [0.85, 0.9, 0.85],
@@ -400,7 +537,12 @@ export const Navbar = () => {
             <Button
               as={Link}
               href="/auth/register"
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold border-0 px-6 shadow-lg"
+              className={clsx(
+                "text-white font-bold border-0 px-6 shadow-lg",
+                theme === "dark"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-500"
+                  : "bg-gradient-to-r from-cyan-500 to-blue-500"
+              )}
               radius="full"
               startContent={
                 <motion.div
@@ -449,7 +591,7 @@ export const Navbar = () => {
           </motion.div>
         </NavbarItem>
 
-        {/* Login button */}
+        {/* Login button - theme aware */}
         <NavbarItem className="hidden md:flex ml-2">
           <motion.div
             whileHover={{
@@ -465,14 +607,23 @@ export const Navbar = () => {
               as={Link}
               href="/auth/login"
               variant="flat"
-              className="bg-white/10 text-white border border-white/20 shadow-inner"
+              className={clsx(
+                "shadow-inner",
+                theme === "dark"
+                  ? "bg-white/10 text-white border border-white/20"
+                  : "bg-blue-50 text-blue-700 border border-blue-200"
+              )}
               radius="full"
               startContent={
                 <motion.div
                   animate={{ y: [0, -3, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <FaSpaceShuttle className="text-cyan-200" />
+                  <FaSpaceShuttle
+                    className={
+                      theme === "dark" ? "text-cyan-200" : "text-blue-400"
+                    }
+                  />
                 </motion.div>
               }
             >
@@ -484,7 +635,10 @@ export const Navbar = () => {
                     {[...Array(3)].map((_, i) => (
                       <motion.div
                         key={`login-trail-${i}`}
-                        className="absolute right-3 h-1.5 w-6 rounded-full bg-cyan-400/40"
+                        className={clsx(
+                          "absolute right-3 h-1.5 w-6 rounded-full",
+                          theme === "dark" ? "bg-cyan-400/40" : "bg-blue-400/40"
+                        )}
                         initial={{ opacity: 0, x: 0 }}
                         animate={{
                           opacity: [0, 0.7, 0],
@@ -506,37 +660,75 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      {/* Mobile menu toggle */}
+      {/* Mobile menu toggle - theme aware */}
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <div className="flex items-center gap-2">
           {/* Language Switcher for Mobile */}
           <LanguageSwitcher />
 
+          {/* Mobile Theme Toggle */}
           <motion.div
-            whileHover={{ rotate: 360, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
-            className="bg-blue-600/50 p-1 rounded-full backdrop-blur-sm"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className={clsx(
+              "p-1 rounded-full backdrop-blur-sm",
+              theme === "dark" ? "bg-blue-600/50" : "bg-blue-100/80"
+            )}
           >
-            <ThemeSwitch />
+            <div className="relative overflow-hidden rounded-full flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                {theme === "dark" ? (
+                  <motion.div
+                    key="moon-mobile"
+                    initial={{ rotate: -30, opacity: 0, scale: 0.5 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <HiMoon className="w-5 h-5 text-cyan-300" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="sun-mobile"
+                    initial={{ rotate: 30, opacity: 0, scale: 0.5 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: -30, opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <HiSun className="w-5 h-5 text-yellow-500" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+            </div>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <NavbarMenuToggle
-              className="text-white bg-blue-600/40 rounded-full p-1 backdrop-blur-sm"
+              className={clsx(
+                "rounded-full p-1 backdrop-blur-sm",
+                theme === "dark"
+                  ? "text-white bg-blue-600/40"
+                  : "text-blue-700 bg-blue-100"
+              )}
               icon={
                 isMenuOpen ? (
                   <motion.div
                     animate={{ rotate: 90 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <IoRocket className="text-lg text-cyan-200" />
+                    <IoRocket
+                      className={`text-lg ${theme === "dark" ? "text-cyan-200" : "text-blue-400"}`}
+                    />
                   </motion.div>
                 ) : (
                   <motion.div
                     animate={{ y: [0, -2, 0] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
                   >
-                    <IoRocket className="text-lg text-cyan-200" />
+                    <IoRocket
+                      className={`text-lg ${theme === "dark" ? "text-cyan-200" : "text-blue-400"}`}
+                    />
                   </motion.div>
                 )
               }
@@ -546,10 +738,17 @@ export const Navbar = () => {
         </div>
       </NavbarContent>
 
-      {/* Mobile menu with improved animations */}
+      {/* Mobile menu with improved animations - theme aware */}
       <AnimatePresence>
         {isMenuOpen && (
-          <NavbarMenu className="pt-16 pb-10 bg-gradient-to-b from-blue-800/97 via-blue-700/97 to-indigo-800/97">
+          <NavbarMenu
+            className={clsx(
+              "pt-16 pb-10",
+              theme === "dark"
+                ? "bg-gradient-to-b from-blue-800/97 via-blue-700/97 to-indigo-800/97"
+                : "bg-gradient-to-b from-white/97 via-blue-50/97 to-indigo-50/97"
+            )}
+          >
             {/* Navigation items with improved animations */}
             <motion.div
               className="flex flex-col gap-2 px-4 relative"
@@ -561,6 +760,7 @@ export const Navbar = () => {
               {siteConfig.navItems.map((item, index) => {
                 // Translate navigation items for mobile
                 const itemLabel = t("navItems", item.label.toLowerCase());
+                const isActive = pathname === item.href;
 
                 return (
                   <motion.div
@@ -580,19 +780,22 @@ export const Navbar = () => {
                           href={item.href}
                           className={clsx(
                             "flex items-center gap-3 w-full px-5 py-4 rounded-xl",
-                            pathname === item.href
-                              ? "bg-blue-600/30 text-white shadow-inner border border-blue-400/20"
-                              : "text-white hover:bg-blue-600/20"
+                            isActive
+                              ? theme === "dark"
+                                ? "bg-blue-600/30 text-white shadow-inner border border-blue-400/20"
+                                : "bg-blue-100/60 text-blue-800 shadow-inner border border-blue-200"
+                              : theme === "dark"
+                                ? "text-white hover:bg-blue-600/20"
+                                : "text-blue-800 hover:bg-blue-100/40"
                           )}
                         >
                           <motion.div
                             animate={{
-                              rotate:
-                                pathname === item.href ? [0, 10, -10, 0] : 0,
+                              rotate: isActive ? [0, 10, -10, 0] : 0,
                             }}
                             transition={{
                               duration: 3,
-                              repeat: pathname === item.href ? Infinity : 0,
+                              repeat: isActive ? Infinity : 0,
                             }}
                           >
                             {navIcons[item.href as keyof typeof navIcons]}
@@ -600,7 +803,7 @@ export const Navbar = () => {
                           <span className="font-medium">{itemLabel}</span>
 
                           {/* Show indicator for active page */}
-                          {pathname === item.href && (
+                          {isActive && (
                             <motion.div
                               className="ml-auto"
                               animate={{
@@ -620,7 +823,7 @@ export const Navbar = () => {
               })}
             </motion.div>
 
-            {/* Action buttons with animation */}
+            {/* Action buttons with animation - theme aware */}
             <motion.div
               className="px-4 mt-6 space-y-3 relative"
               initial={{ opacity: 0, y: 20 }}
@@ -630,10 +833,16 @@ export const Navbar = () => {
             >
               {/* Button backgrounds with glow effect */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl blur-xl -z-10 opacity-30"
+                className={clsx(
+                  "absolute rounded-xl blur-xl -z-10 opacity-30",
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-cyan-400 to-blue-500"
+                    : "bg-gradient-to-r from-cyan-300 to-blue-400"
+                )}
                 style={{ top: "10%", height: "40%" }}
                 animate={{
-                  opacity: [0.2, 0.4, 0.2],
+                  opacity:
+                    theme === "dark" ? [0.2, 0.4, 0.2] : [0.15, 0.35, 0.15],
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -641,7 +850,12 @@ export const Navbar = () => {
               <Button
                 as={Link}
                 href="/auth/register"
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold shadow-lg border-0"
+                className={clsx(
+                  "w-full font-bold shadow-lg border-0",
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
+                    : "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
+                )}
                 radius="full"
                 size="lg"
                 startContent={
@@ -662,7 +876,12 @@ export const Navbar = () => {
               <Button
                 as={Link}
                 href="/auth/login"
-                className="w-full bg-blue-700/40 text-white border border-blue-400/20 backdrop-blur-sm"
+                className={clsx(
+                  "w-full backdrop-blur-sm",
+                  theme === "dark"
+                    ? "bg-blue-700/40 text-white border border-blue-400/20"
+                    : "bg-blue-100/80 text-blue-700 border border-blue-200"
+                )}
                 radius="full"
                 size="lg"
                 startContent={
@@ -670,7 +889,13 @@ export const Navbar = () => {
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <FaSpaceShuttle className="text-cyan-200 text-lg" />
+                    <FaSpaceShuttle
+                      className={
+                        theme === "dark"
+                          ? "text-cyan-200 text-lg"
+                          : "text-blue-400 text-lg"
+                      }
+                    />
                   </motion.div>
                 }
               >
@@ -680,11 +905,22 @@ export const Navbar = () => {
               <Button
                 as={Link}
                 href="/parent-portal"
-                className="w-full bg-transparent text-blue-100 border border-blue-400/20"
+                className={clsx(
+                  "w-full",
+                  theme === "dark"
+                    ? "bg-transparent text-blue-100 border border-blue-400/20"
+                    : "bg-transparent text-blue-700 border border-blue-200"
+                )}
                 radius="full"
                 variant="bordered"
                 size="lg"
-                startContent={<FaRobot className="text-cyan-200" />}
+                startContent={
+                  <FaRobot
+                    className={
+                      theme === "dark" ? "text-cyan-200" : "text-blue-400"
+                    }
+                  />
+                }
               >
                 {t("auth", "parentAccess")}
               </Button>
@@ -692,7 +928,10 @@ export const Navbar = () => {
 
             {/* Footer credits in mobile menu */}
             <motion.div
-              className="absolute bottom-4 left-0 right-0 text-center text-blue-200/60 text-xs"
+              className={clsx(
+                "absolute bottom-4 left-0 right-0 text-center text-xs",
+                theme === "dark" ? "text-blue-200/60" : "text-blue-600/60"
+              )}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
