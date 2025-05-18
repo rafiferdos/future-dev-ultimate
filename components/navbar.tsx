@@ -15,7 +15,7 @@ import {
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaLaptopCode,
   FaPython,
@@ -30,10 +30,11 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
+import { useIsClient } from "@/hooks/useIsClient";
 import Logo from "@/public/logo.png";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,6 +43,30 @@ export const Navbar = () => {
   const pathname = usePathname();
   const { language, t } = useLanguage();
   const { theme } = useTheme();
+
+  // Add this to ensure client-side only rendering for elements causing hydration issues
+  const isClient = useIsClient();
+
+  // Use refs to ensure stable values across renders for random numbers
+  const particlePositionsRef = useRef<number[][]>(
+    Array(5)
+      .fill(0)
+      .map(() => [
+        45 + Math.floor(Math.random() * 10),
+        -20 + Math.floor(Math.random() * 40),
+        -30 - Math.floor(Math.random() * 20),
+      ])
+  );
+
+  const registerParticlesRef = useRef<number[][]>(
+    Array(5)
+      .fill(0)
+      .map(() => [
+        20 + Math.floor(Math.random() * 15),
+        (Math.random() - 0.5) * 50,
+        (Math.random() - 1) * 40,
+      ])
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,45 +114,47 @@ export const Navbar = () => {
             : "bg-gradient-to-r from-white/80 via-blue-50/80 to-indigo-50/80 backdrop-blur-sm"
       )}
     >
-      {/* Animated decorative elements - theme aware */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className={clsx(
-            "absolute h-14 w-14 rounded-full blur-xl",
-            theme === "dark" ? "bg-cyan-400/10" : "bg-cyan-500/5"
-          )}
-          style={{ top: "10%", left: "5%" }}
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{ duration: 7, repeat: Infinity }}
-        />
-        <motion.div
-          className={clsx(
-            "absolute h-20 w-20 rounded-full blur-xl",
-            theme === "dark" ? "bg-blue-300/10" : "bg-blue-400/5"
-          )}
-          style={{ top: "60%", left: "20%" }}
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{ duration: 5, repeat: Infinity }}
-        />
-        <motion.div
-          className={clsx(
-            "absolute h-16 w-16 rounded-full blur-xl",
-            theme === "dark" ? "bg-indigo-400/10" : "bg-indigo-500/5"
-          )}
-          style={{ top: "30%", right: "10%" }}
-          animate={{
-            scale: [1, 1.4, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-      </div>
+      {/* Only render client-side animations after hydration */}
+      {isClient && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className={clsx(
+              "absolute h-14 w-14 rounded-full blur-xl",
+              theme === "dark" ? "bg-cyan-400/10" : "bg-cyan-500/5"
+            )}
+            style={{ top: "10%", left: "5%" }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.4, 0.7, 0.4],
+            }}
+            transition={{ duration: 7, repeat: Infinity }}
+          />
+          <motion.div
+            className={clsx(
+              "absolute h-20 w-20 rounded-full blur-xl",
+              theme === "dark" ? "bg-blue-300/10" : "bg-blue-400/5"
+            )}
+            style={{ top: "60%", left: "20%" }}
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{ duration: 5, repeat: Infinity }}
+          />
+          <motion.div
+            className={clsx(
+              "absolute h-16 w-16 rounded-full blur-xl",
+              theme === "dark" ? "bg-indigo-400/10" : "bg-indigo-500/5"
+            )}
+            style={{ top: "30%", right: "10%" }}
+            animate={{
+              scale: [1, 1.4, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+        </div>
+      )}
 
       {/* Logo and brand - theme aware */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -142,20 +169,22 @@ export const Navbar = () => {
               href="/"
             >
               <div className="relative">
-                <motion.div
-                  className={clsx(
-                    "absolute -inset-1 rounded-full bg-gradient-to-r blur-sm",
-                    theme === "dark"
-                      ? "from-cyan-400 to-blue-500 opacity-70"
-                      : "from-cyan-300 to-blue-400 opacity-60"
-                  )}
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    opacity:
-                      theme === "dark" ? [0.5, 0.7, 0.5] : [0.4, 0.6, 0.4],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                />
+                {isClient && (
+                  <motion.div
+                    className={clsx(
+                      "absolute -inset-1 rounded-full bg-gradient-to-r blur-sm",
+                      theme === "dark"
+                        ? "from-cyan-400 to-blue-500 opacity-70"
+                        : "from-cyan-300 to-blue-400 opacity-60"
+                    )}
+                    animate={{
+                      scale: [1, 1.1, 1],
+                      opacity:
+                        theme === "dark" ? [0.5, 0.7, 0.5] : [0.4, 0.6, 0.4],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                )}
                 <div
                   className={clsx(
                     "relative rounded-full p-1.5",
@@ -169,30 +198,32 @@ export const Navbar = () => {
                   />
                 </div>
 
-                {/* Orbiting Python logo */}
-                <motion.div
-                  className={clsx(
-                    "absolute -top-1 -right-1 rounded-full p-0.5 shadow-lg z-10 border-2",
-                    theme === "dark"
-                      ? "bg-yellow-400 text-blue-900 border-blue-900/30"
-                      : "bg-yellow-400 text-blue-700 border-blue-700/30"
-                  )}
-                  animate={{
-                    rotate: [0, 360],
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  style={{
-                    transformOrigin: "center center",
-                    width: "1.3rem",
-                    height: "1.3rem",
-                  }}
-                >
-                  <FaPython className="w-full h-full" />
-                </motion.div>
+                {/* Orbiting Python logo - client-side only */}
+                {isClient && (
+                  <motion.div
+                    className={clsx(
+                      "absolute -top-1 -right-1 rounded-full p-0.5 shadow-lg z-10 border-2",
+                      theme === "dark"
+                        ? "bg-yellow-400 text-blue-900 border-blue-900/30"
+                        : "bg-yellow-400 text-blue-700 border-blue-700/30"
+                    )}
+                    animate={{
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    style={{
+                      transformOrigin: "center center",
+                      width: "1.3rem",
+                      height: "1.3rem",
+                    }}
+                  >
+                    <FaPython className="w-full h-full" />
+                  </motion.div>
+                )}
               </div>
 
               <div>
@@ -205,50 +236,79 @@ export const Navbar = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <motion.span
-                    className={
-                      theme === "dark" ? "text-cyan-300" : "text-cyan-600"
-                    }
-                    animate={{
-                      textShadow:
-                        theme === "dark"
-                          ? [
-                              "0 0 8px rgba(103,232,249,0)",
-                              "0 0 15px rgba(103,232,249,0.5)",
-                              "0 0 8px rgba(103,232,249,0)",
-                            ]
-                          : [
-                              "0 0 8px rgba(8,145,178,0)",
-                              "0 0 15px rgba(8,145,178,0.3)",
-                              "0 0 8px rgba(8,145,178,0)",
-                            ],
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
-                  >
-                    {language === "en" ? "Code" : "কোড"}
-                  </motion.span>
-                  <motion.span
-                    className={
-                      theme === "dark" ? "text-yellow-300" : "text-yellow-500"
-                    }
-                    animate={{
-                      textShadow:
-                        theme === "dark"
-                          ? [
-                              "0 0 8px rgba(250,204,21,0)",
-                              "0 0 15px rgba(250,204,21,0.5)",
-                              "0 0 8px rgba(250,204,21,0)",
-                            ]
-                          : [
-                              "0 0 8px rgba(234,179,8,0)",
-                              "0 0 15px rgba(234,179,8,0.3)",
-                              "0 0 8px rgba(234,179,8,0)",
-                            ],
-                    }}
-                    transition={{ duration: 2.5, delay: 0.5, repeat: Infinity }}
-                  >
-                    {language === "en" ? "Py" : "পাই"}
-                  </motion.span>
+                  {isClient ? (
+                    <>
+                      <motion.span
+                        className={
+                          theme === "dark" ? "text-cyan-300" : "text-cyan-600"
+                        }
+                        animate={{
+                          textShadow:
+                            theme === "dark"
+                              ? [
+                                  "0 0 8px rgba(103,232,249,0)",
+                                  "0 0 15px rgba(103,232,249,0.5)",
+                                  "0 0 8px rgba(103,232,249,0)",
+                                ]
+                              : [
+                                  "0 0 8px rgba(8,145,178,0)",
+                                  "0 0 15px rgba(8,145,178,0.3)",
+                                  "0 0 8px rgba(8,145,178,0)",
+                                ],
+                        }}
+                        transition={{ duration: 2.5, repeat: Infinity }}
+                      >
+                        {language === "en" ? "Code" : "কোড"}
+                      </motion.span>
+                      <motion.span
+                        className={
+                          theme === "dark"
+                            ? "text-yellow-300"
+                            : "text-yellow-500"
+                        }
+                        animate={{
+                          textShadow:
+                            theme === "dark"
+                              ? [
+                                  "0 0 8px rgba(250,204,21,0)",
+                                  "0 0 15px rgba(250,204,21,0.5)",
+                                  "0 0 8px rgba(250,204,21,0)",
+                                ]
+                              : [
+                                  "0 0 8px rgba(234,179,8,0)",
+                                  "0 0 15px rgba(234,179,8,0.3)",
+                                  "0 0 8px rgba(234,179,8,0)",
+                                ],
+                        }}
+                        transition={{
+                          duration: 2.5,
+                          delay: 0.5,
+                          repeat: Infinity,
+                        }}
+                      >
+                        {language === "en" ? "Py" : "পাই"}
+                      </motion.span>
+                    </>
+                  ) : (
+                    <span>
+                      <span
+                        className={
+                          theme === "dark" ? "text-cyan-300" : "text-cyan-600"
+                        }
+                      >
+                        {language === "en" ? "Code" : "কোড"}
+                      </span>
+                      <span
+                        className={
+                          theme === "dark"
+                            ? "text-yellow-300"
+                            : "text-yellow-500"
+                        }
+                      >
+                        {language === "en" ? "Py" : "পাই"}
+                      </span>
+                    </span>
+                  )}
                 </motion.p>
                 <motion.p
                   className={clsx(
@@ -270,8 +330,6 @@ export const Navbar = () => {
         <div className="hidden lg:flex gap-1 justify-start ml-8">
           {siteConfig.navItems.map((item, i) => {
             const isActive = pathname === item.href;
-
-            // Translate navigation items
             const itemLabel = t("navItems", item.label.toLowerCase());
 
             return (
@@ -309,7 +367,7 @@ export const Navbar = () => {
                       href={item.href}
                     >
                       {/* Animated background for active item */}
-                      {isActive && (
+                      {isActive && isClient && (
                         <motion.div
                           className={clsx(
                             "absolute inset-0 rounded-full -z-10",
@@ -346,7 +404,7 @@ export const Navbar = () => {
                       {itemLabel}
 
                       {/* Active indicator with animation */}
-                      {isActive && (
+                      {isActive && isClient && (
                         <motion.div
                           animate={{
                             rotate: [0, 360],
@@ -379,7 +437,7 @@ export const Navbar = () => {
           {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Enhanced Theme Toggle */}
+          {/* Enhanced Theme Toggle - Client-side only for animations */}
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -393,31 +451,39 @@ export const Navbar = () => {
                   : "bg-white shadow-inner border border-blue-200"
               )}
             >
-              <motion.div
-                className="absolute inset-0 opacity-50"
-                animate={{
-                  background:
-                    theme === "dark"
-                      ? [
-                          "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                          "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                          "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                        ]
-                      : [
-                          "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                          "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                          "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                        ],
-                }}
-                transition={{ duration: 5, repeat: Infinity }}
-              />
+              {isClient && (
+                <motion.div
+                  className="absolute inset-0 opacity-50"
+                  animate={{
+                    background:
+                      theme === "dark"
+                        ? [
+                            "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                            "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                            "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                          ]
+                        : [
+                            "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                            "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                            "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                          ],
+                  }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                />
+              )}
               <AnimatePresence mode="wait">
                 {theme === "dark" ? (
                   <motion.div
                     key="moon"
-                    initial={{ rotate: -30, opacity: 0, scale: 0.5 }}
-                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
+                    initial={
+                      isClient ? { rotate: -30, opacity: 0, scale: 0.5 } : {}
+                    }
+                    animate={
+                      isClient ? { rotate: 0, opacity: 1, scale: 1 } : {}
+                    }
+                    exit={
+                      isClient ? { rotate: 30, opacity: 0, scale: 0.5 } : {}
+                    }
                     transition={{ duration: 0.2 }}
                   >
                     <HiMoon className="w-5 h-5 text-cyan-300" />
@@ -425,9 +491,15 @@ export const Navbar = () => {
                 ) : (
                   <motion.div
                     key="sun"
-                    initial={{ rotate: 30, opacity: 0, scale: 0.5 }}
-                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotate: -30, opacity: 0, scale: 0.5 }}
+                    initial={
+                      isClient ? { rotate: 30, opacity: 0, scale: 0.5 } : {}
+                    }
+                    animate={
+                      isClient ? { rotate: 0, opacity: 1, scale: 1 } : {}
+                    }
+                    exit={
+                      isClient ? { rotate: -30, opacity: 0, scale: 0.5 } : {}
+                    }
                     transition={{ duration: 0.2 }}
                   >
                     <HiSun className="w-5 h-5 text-yellow-500" />
@@ -460,40 +532,45 @@ export const Navbar = () => {
               radius="full"
               size="sm"
             >
-              {/* Animated particles on hover */}
-              <AnimatePresence>
-                {hoverButton === "parent" && (
-                  <>
-                    {[...Array(3)].map((_, i) => (
-                      <motion.div
-                        key={`parent-particle-${i}`}
-                        className={clsx(
-                          "absolute w-2 h-2 rounded-full",
-                          theme === "dark" ? "bg-cyan-200" : "bg-cyan-100"
-                        )}
-                        initial={{
-                          opacity: 0,
-                          scale: 0,
-                          x: 0,
-                          y: 0,
-                        }}
-                        animate={{
-                          opacity: [0, 1, 0],
-                          scale: [0, 1, 0.5],
-                          x: [0, -20 + Math.random() * 40],
-                          y: [0, -30 - Math.random() * 20],
-                        }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        transition={{ duration: 0.8 }}
-                        style={{
-                          left: `${45 + i * 5}%`,
-                          top: "50%",
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
+              {/* Animated particles on hover - client-side only with stable positions */}
+              {isClient && (
+                <AnimatePresence>
+                  {hoverButton === "parent" && (
+                    <>
+                      {[...Array(3)].map((_, i) => {
+                        const posData = particlePositionsRef.current[i];
+                        return (
+                          <motion.div
+                            key={`parent-particle-${i}`}
+                            className={clsx(
+                              "absolute w-2 h-2 rounded-full",
+                              theme === "dark" ? "bg-cyan-200" : "bg-cyan-100"
+                            )}
+                            initial={{
+                              opacity: 0,
+                              scale: 0,
+                              x: 0,
+                              y: 0,
+                            }}
+                            animate={{
+                              opacity: [0, 1, 0],
+                              scale: [0, 1, 0.5],
+                              x: [0, posData[1]],
+                              y: [0, posData[2]],
+                            }}
+                            exit={{ opacity: 0, scale: 0 }}
+                            transition={{ duration: 0.8 }}
+                            style={{
+                              left: `${posData[0]}%`,
+                              top: "50%",
+                            }}
+                          />
+                        );
+                      })}
+                    </>
+                  )}
+                </AnimatePresence>
+              )}
 
               <motion.div className="flex items-center gap-1.5">
                 <FaRobot
@@ -519,20 +596,22 @@ export const Navbar = () => {
             onHoverEnd={() => setHoverButton(null)}
             className="relative"
           >
-            {/* Button glow effect */}
-            <motion.div
-              className={clsx(
-                "absolute inset-0 rounded-full blur-md -z-10",
-                theme === "dark"
-                  ? "bg-gradient-to-r from-cyan-400 to-blue-500"
-                  : "bg-gradient-to-r from-cyan-300 to-blue-400"
-              )}
-              animate={{
-                opacity: [0.5, 0.8, 0.5],
-                scale: [0.85, 0.9, 0.85],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
+            {/* Button glow effect - client-side only */}
+            {isClient && (
+              <motion.div
+                className={clsx(
+                  "absolute inset-0 rounded-full blur-md -z-10",
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-cyan-400 to-blue-500"
+                    : "bg-gradient-to-r from-cyan-300 to-blue-400"
+                )}
+                animate={{
+                  opacity: [0.5, 0.8, 0.5],
+                  scale: [0.85, 0.9, 0.85],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            )}
 
             <Button
               as={Link}
@@ -545,48 +624,59 @@ export const Navbar = () => {
               )}
               radius="full"
               startContent={
-                <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="text-yellow-300"
-                >
-                  <FaUserAstronaut className="text-lg" />
-                </motion.div>
+                isClient ? (
+                  <motion.div
+                    animate={{
+                      rotate: [0, 10, -10, 0],
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="text-yellow-300"
+                  >
+                    <FaUserAstronaut className="text-lg" />
+                  </motion.div>
+                ) : (
+                  <span className="text-yellow-300">
+                    <FaUserAstronaut className="text-lg" />
+                  </span>
+                )
               }
             >
               {t("auth", "register")}
-              {/* Animated particles on hover */}
-              <AnimatePresence>
-                {hoverButton === "register" && (
-                  <>
-                    {[...Array(5)].map((_, i) => (
-                      <motion.div
-                        key={`register-particle-${i}`}
-                        className="absolute w-1.5 h-1.5 rounded-full bg-yellow-300"
-                        initial={{
-                          opacity: 0,
-                          x: 0,
-                          y: 0,
-                        }}
-                        animate={{
-                          opacity: [0, 1, 0],
-                          x: [0, (Math.random() - 0.5) * 50],
-                          y: [0, (Math.random() - 1) * 40],
-                        }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8 + Math.random() * 0.5 }}
-                        style={{
-                          left: `${20 + i * 15}%`,
-                          top: "50%",
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
+              {/* Animated particles on hover - client-side only with stable positions */}
+              {isClient && (
+                <AnimatePresence>
+                  {hoverButton === "register" && (
+                    <>
+                      {[...Array(5)].map((_, i) => {
+                        const posData = registerParticlesRef.current[i];
+                        return (
+                          <motion.div
+                            key={`register-particle-${i}`}
+                            className="absolute w-1.5 h-1.5 rounded-full bg-yellow-300"
+                            initial={{
+                              opacity: 0,
+                              x: 0,
+                              y: 0,
+                            }}
+                            animate={{
+                              opacity: [0, 1, 0],
+                              x: [0, posData[1]],
+                              y: [0, posData[2]],
+                            }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.8 + i * 0.1 }}
+                            style={{
+                              left: `${posData[0]}%`,
+                              top: "50%",
+                            }}
+                          />
+                        );
+                      })}
+                    </>
+                  )}
+                </AnimatePresence>
+              )}
             </Button>
           </motion.div>
         </NavbarItem>
