@@ -42,7 +42,7 @@ export default function Home() {
   const { theme } = useTheme();
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [, setShowScrollIndicator] = useState(true);
 
   // Parallax effect for hero section
   useEffect(() => {
@@ -68,7 +68,6 @@ export default function Home() {
     };
   }, []);
 
-
   // Mouse follower animation for hero section
   const MouseFollower = () => {
     return (
@@ -87,7 +86,6 @@ export default function Home() {
       />
     );
   };
-
 
   // Section transitions
   const sectionVariants = {
