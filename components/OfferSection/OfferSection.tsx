@@ -7,7 +7,7 @@ import "swiper/css/bundle";
 
 import offeringData from "../../lib/offeringData";
 import OfferCard from "./OfferCard";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Link from "next/link";
 
 // Define a type

@@ -1,7 +1,7 @@
-import { Button } from '@nextui-org/button';
+import { Button } from "@heroui/button";
 import Link from 'next/link';
 import React from 'react'
-import { Input } from "@nextui-org/input";
+import { Input } from "@heroui/input";
 import { CiMail } from "react-icons/ci";
 
 

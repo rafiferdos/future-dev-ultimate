@@ -1,6 +1,6 @@
 
 
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import React from "react";
 import service from "@/public/home/service.webp";
 import Image from "next/image";

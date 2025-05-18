@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import React from "react";
 // import gettyimage from "@/public/chooseUse.png";
 import learning from "@/public/home/learning.webp";

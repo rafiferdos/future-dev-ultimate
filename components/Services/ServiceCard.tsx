@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { Card, CardHeader, CardBody } from "@nextui-org/card";
+import { Card, CardHeader, CardBody } from "@heroui/card";
 
 
 import "@smastrom/react-rating/style.css";
 
-import { Avatar } from "@nextui-org/avatar";
+import { Avatar } from "@heroui/avatar";
 import Link from "next/link";
 
 // Define the type for the user prop

@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Card, CardHeader, CardBody } from "@nextui-org/card";
-import { Button } from "@nextui-org/button";
-import { Avatar } from "@nextui-org/avatar";
+import { Card, CardHeader, CardBody } from "@heroui/card";
+import { Button } from "@heroui/button";
+import { Avatar } from "@heroui/avatar";
 
 interface Data {
   type: string;
