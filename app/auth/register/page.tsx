@@ -54,8 +54,9 @@ export default function RegisterPage() {
 
       // Redirect to login on success
       router.push('/auth/login?registered=true');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: Error | unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
