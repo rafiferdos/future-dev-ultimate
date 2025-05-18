@@ -433,84 +433,72 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-3">
+        <NavbarItem className="hidden sm:flex items-center gap-3">
           {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Enhanced Theme Toggle - Client-side only for animations */}
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
+          {/* Theme Toggle - Fixed height and alignment */}
+          {isClient ? (
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center"
+            >
+              <button
+                className={clsx(
+                  "h-9 w-9 flex items-center justify-center rounded-full",
+                  theme === "dark"
+                    ? "bg-blue-800/80 border border-blue-700"
+                    : "bg-white shadow-inner border border-blue-200"
+                )}
+              >
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <motion.div
+                    className="absolute inset-0 opacity-50 rounded-full"
+                    animate={{
+                      background:
+                        theme === "dark"
+                          ? [
+                              "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                              "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                              "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
+                            ]
+                          : [
+                              "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                              "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                              "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
+                            ],
+                    }}
+                    transition={{ duration: 5, repeat: Infinity }}
+                  />
+                  {theme === "dark" ? (
+                    <HiMoon className="w-5 h-5 text-cyan-300 relative z-10" />
+                  ) : (
+                    <HiSun className="w-5 h-5 text-yellow-500 relative z-10" />
+                  )}
+                  <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+                </div>
+              </button>
+            </motion.div>
+          ) : (
             <div
               className={clsx(
-                "relative overflow-hidden rounded-full p-1.5 flex items-center justify-center",
+                "h-9 w-9 flex items-center justify-center rounded-full",
                 theme === "dark"
                   ? "bg-blue-800/80 border border-blue-700"
                   : "bg-white shadow-inner border border-blue-200"
               )}
             >
-              {isClient && (
-                <motion.div
-                  className="absolute inset-0 opacity-50"
-                  animate={{
-                    background:
-                      theme === "dark"
-                        ? [
-                            "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                            "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                            "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                          ]
-                        : [
-                            "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                            "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                            "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                          ],
-                  }}
-                  transition={{ duration: 5, repeat: Infinity }}
-                />
+              {theme === "dark" ? (
+                <HiMoon className="w-5 h-5 text-cyan-300" />
+              ) : (
+                <HiSun className="w-5 h-5 text-yellow-500" />
               )}
-              <AnimatePresence mode="wait">
-                {theme === "dark" ? (
-                  <motion.div
-                    key="moon"
-                    initial={
-                      isClient ? { rotate: -30, opacity: 0, scale: 0.5 } : {}
-                    }
-                    animate={
-                      isClient ? { rotate: 0, opacity: 1, scale: 1 } : {}
-                    }
-                    exit={
-                      isClient ? { rotate: 30, opacity: 0, scale: 0.5 } : {}
-                    }
-                    transition={{ duration: 0.2 }}
-                  >
-                    <HiMoon className="w-5 h-5 text-cyan-300" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="sun"
-                    initial={
-                      isClient ? { rotate: 30, opacity: 0, scale: 0.5 } : {}
-                    }
-                    animate={
-                      isClient ? { rotate: 0, opacity: 1, scale: 1 } : {}
-                    }
-                    exit={
-                      isClient ? { rotate: -30, opacity: 0, scale: 0.5 } : {}
-                    }
-                    transition={{ duration: 0.2 }}
-                  >
-                    <HiSun className="w-5 h-5 text-yellow-500" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
               <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
             </div>
-          </motion.div>
+          )}
 
-          {/* Parent portal button - theme aware */}
+          {/* Parent portal button - Fixed height and alignment */}
           <motion.div
             whileHover={{
               scale: 1.05,
@@ -519,12 +507,13 @@ export const Navbar = () => {
             whileTap={{ scale: 0.95 }}
             onHoverStart={() => setHoverButton("parent")}
             onHoverEnd={() => setHoverButton(null)}
+            className="flex items-center h-9"
           >
             <Button
               as={Link}
               href="/parent-portal"
               className={clsx(
-                "border-0 shadow-md relative overflow-hidden",
+                "border-0 shadow-md h-9 px-3 flex items-center",
                 theme === "dark"
                   ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white"
                   : "bg-gradient-to-r from-teal-400 to-cyan-500 text-white"
@@ -532,12 +521,11 @@ export const Navbar = () => {
               radius="full"
               size="sm"
             >
-              {/* Animated particles on hover - client-side only with stable positions */}
               {isClient && (
                 <AnimatePresence>
                   {hoverButton === "parent" && (
                     <>
-                      {[...Array(3)].map((_, i) => {
+                      {[0, 1, 2].map((i) => {
                         const posData = particlePositionsRef.current[i];
                         return (
                           <motion.div
@@ -546,12 +534,7 @@ export const Navbar = () => {
                               "absolute w-2 h-2 rounded-full",
                               theme === "dark" ? "bg-cyan-200" : "bg-cyan-100"
                             )}
-                            initial={{
-                              opacity: 0,
-                              scale: 0,
-                              x: 0,
-                              y: 0,
-                            }}
+                            initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
                             animate={{
                               opacity: [0, 1, 0],
                               scale: [0, 1, 0.5],
@@ -572,14 +555,14 @@ export const Navbar = () => {
                 </AnimatePresence>
               )}
 
-              <motion.div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 <FaRobot
                   className={
                     theme === "dark" ? "text-cyan-200" : "text-cyan-100"
                   }
-                />{" "}
-                {t("auth", "parentAccess")}
-              </motion.div>
+                />
+                <span>{t("auth", "parentAccess")}</span>
+              </div>
             </Button>
           </motion.div>
         </NavbarItem>
