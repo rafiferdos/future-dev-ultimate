@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import {
@@ -52,7 +53,8 @@ export const Navbar = () => {
     if (isClient && themeFromContext) {
       setTheme(themeFromContext);
     }
-  }, [isClient, themeFromContext]);  useEffect(() => {
+  }, [isClient, themeFromContext]);
+  useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -67,14 +69,25 @@ export const Navbar = () => {
         // Scrolling up - show navbar
         setVisible(true);
       }
-      // Not changing visibility when stopping scroll
 
       // Update last scroll position
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Add throttling to improve performance
+    let ticking = false;
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", scrollListener, { passive: true });
+    return () => window.removeEventListener("scroll", scrollListener);
   }, [lastScrollY]);
 
   // Map icons to nav items - Python themed icons
@@ -103,7 +116,7 @@ export const Navbar = () => {
       maxWidth="xl"
       position="sticky"
       className={clsx(
-        "transition-all duration-500 py-3 z-50",
+        "fixed top-0 left-0 right-0 transition-all duration-300 py-3 z-[9999]",
         scrolled
           ? "bg-gradient-to-r from-blue-950/95 via-indigo-950/95 to-blue-900/95 shadow-lg shadow-blue-900/30"
           : "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80",
