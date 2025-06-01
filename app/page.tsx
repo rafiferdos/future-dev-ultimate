@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import BlogSection from "@/components/BlogSection";
 import ChooseUsSection from "@/components/ChooseUsSection";
 import Educators from "@/components/Educators";
@@ -36,6 +35,7 @@ import {
   FaStar,
 } from "react-icons/fa";
 import { IoColorWandOutline, IoRocketSharp } from "react-icons/io5";
+import { getBackgroundStyles, getPathColors } from "./page-utils";
 
 export default function Home() {
   const { language } = useLanguage();
@@ -115,7 +115,6 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           {/* Base background gradient that works with both themes */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-950 opacity-100" />
-
           {/* Animated gradient overlay */}
           <motion.div
             className="absolute inset-0 opacity-40 dark:opacity-30"
@@ -133,20 +132,12 @@ export default function Home() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-          />
-
+          />{" "}
           {/* Background Grid Pattern */}
           <div
             className="absolute inset-0"
-            style={{
-              backgroundImage:
-                theme === "dark"
-                  ? "linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px)"
-                  : "linear-gradient(to right, rgba(79, 70, 229, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(79, 70, 229, 0.15) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-
+            style={getBackgroundStyles(theme || "light").gridBackground}
+          />{" "}
           {/* Animated Flow Lines */}
           <svg
             className="absolute inset-0 w-full h-full opacity-40 dark:opacity-20"
@@ -154,8 +145,8 @@ export default function Home() {
           >
             <motion.path
               d="M0,100 Q250,200 500,100 T1000,100 T1500,100"
-              stroke={theme === "dark" ? "#60a5fa" : "#3b82f6"}
-              strokeWidth="2"
+              stroke={getPathColors(theme || "light").primary}
+              strokeWidth={2}
               fill="none"
               animate={{
                 d: [
@@ -168,8 +159,8 @@ export default function Home() {
             />
             <motion.path
               d="M0,250 Q250,150 500,250 T1000,250 T1500,250"
-              stroke={theme === "dark" ? "#818cf8" : "#6366f1"}
-              strokeWidth="2"
+              stroke={getPathColors(theme || "light").secondary}
+              strokeWidth={2}
               fill="none"
               animate={{
                 d: [
@@ -181,21 +172,13 @@ export default function Home() {
               transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
             />
           </svg>
-
           {/* Moving gradient accents */}
           <div className="absolute inset-0 overflow-hidden">
+            {" "}
             {/* Top-right accent */}
             <motion.div
               className="absolute w-[40%] h-[40%] rounded-full blur-3xl"
-              style={{
-                top: "-5%",
-                right: "-5%",
-                background:
-                  theme === "dark"
-                    ? "radial-gradient(circle, rgba(79, 70, 229, 0.3), transparent 70%)"
-                    : "radial-gradient(circle, rgba(79, 70, 229, 0.2), transparent 70%)",
-                opacity: 0.6,
-              }}
+              style={getBackgroundStyles(theme || "light").topRightAccent}
               animate={{
                 scale: [1, 1.1, 1],
                 x: [0, 20, 0],
@@ -207,20 +190,11 @@ export default function Home() {
                 repeatType: "reverse",
                 ease: "easeInOut",
               }}
-            />
-
+            />{" "}
             {/* Bottom-left accent */}
             <motion.div
               className="absolute w-[45%] h-[45%] rounded-full blur-3xl"
-              style={{
-                bottom: "-5%",
-                left: "-5%",
-                background:
-                  theme === "dark"
-                    ? "radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent 70%)"
-                    : "radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%)",
-                opacity: 0.6,
-              }}
+              style={getBackgroundStyles(theme || "light").bottomLeftAccent}
               animate={{
                 scale: [1, 1.15, 1],
                 x: [0, -20, 0],
@@ -233,20 +207,11 @@ export default function Home() {
                 ease: "easeInOut",
                 delay: 2,
               }}
-            />
-
+            />{" "}
             {/* Middle accent */}
             <motion.div
               className="absolute w-[50%] h-[50%] rounded-full blur-3xl"
-              style={{
-                top: "25%",
-                left: "25%",
-                background:
-                  theme === "dark"
-                    ? "radial-gradient(circle, rgba(56, 189, 248, 0.2), transparent 70%)"
-                    : "radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 70%)",
-                opacity: 0.4,
-              }}
+              style={getBackgroundStyles(theme || "light").middleAccent}
               animate={{
                 scale: [1, 1.1, 1],
                 x: [0, 30, 0],
@@ -261,7 +226,6 @@ export default function Home() {
               }}
             />
           </div>
-
           {/* Subtle stars in dark mode only */}
           {theme === "dark" && (
             <div className="absolute inset-0">
