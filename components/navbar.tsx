@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import {
@@ -15,7 +14,7 @@ import {
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaLaptopCode,
   FaPython,
@@ -39,7 +38,8 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hoverButton, setHoverButton] = useState<string | null>(null);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const { language, t } = useLanguage();
 
@@ -47,39 +47,35 @@ export const Navbar = () => {
   const { theme: themeFromContext } = useTheme();
   const [theme, setTheme] = useState("dark");
   const isClient = useIsClient();
-
   // Only update theme after client-side hydration
   useEffect(() => {
     if (isClient && themeFromContext) {
       setTheme(themeFromContext);
     }
-  }, [isClient, themeFromContext]);
-
-  // Replace random-generating refs with static values to avoid hydration mismatches
-  const particlePositionsRef = useRef([
-    [45, -20, -30],
-    [50, -15, -35],
-    [55, -25, -40],
-    [48, -18, -32],
-    [52, -22, -38],
-  ]);
-
-  const registerParticlesRef = useRef([
-    [20, 15, -20],
-    [25, -15, -30],
-    [30, 20, -25],
-    [35, -10, -15],
-    [28, 12, -35],
-  ]);
-
-  useEffect(() => {
+  }, [isClient, themeFromContext]);  useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      const currentScrollY = window.scrollY;
+
+      // Determine if scrolled from top
+      setScrolled(currentScrollY > 30);
+
+      // Hide when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down - hide navbar
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show navbar
+        setVisible(true);
+      }
+      // Not changing visibility when stopping scroll
+
+      // Update last scroll position
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   // Map icons to nav items - Python themed icons
   const navIcons = {
@@ -102,7 +98,6 @@ export const Navbar = () => {
       },
     }),
   };
-
   return (
     <NextUINavbar
       maxWidth="xl"
@@ -111,7 +106,8 @@ export const Navbar = () => {
         "transition-all duration-500 py-3 z-50",
         scrolled
           ? "bg-gradient-to-r from-blue-950/95 via-indigo-950/95 to-blue-900/95 shadow-lg shadow-blue-900/30"
-          : "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80"
+          : "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80",
+        visible ? "translate-y-0" : "-translate-y-full"
       )}
     >
       {/* Background animations - client-side only */}
