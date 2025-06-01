@@ -1,143 +1,827 @@
-"use client"
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+"use client";
+import { useLanguage } from "@/context/LanguageContext";
+import { useIsClient } from "@/hooks/useIsClient";
+import { motion, useAnimation, useInView } from "framer-motion";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
+import { FaBrain, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
+import { HiSparkles } from "react-icons/hi";
+import { MdEmail, MdOutlineWavingHand, MdVerified } from "react-icons/md";
+import { PiGraduationCapFill, PiMedalFill, PiStarFill } from "react-icons/pi";
+import {
+  RiLightbulbFlashLine,
+  RiStarSmileFill,
+  RiTeamFill,
+} from "react-icons/ri";
 import "swiper/css";
 import "swiper/css/bundle";
+import "swiper/css/effect-cards";
 import "swiper/css/pagination";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import educatorsData from "../lib/educatorsData";
-import { PiCertificateFill } from "react-icons/pi";
-import { MdEmail } from "react-icons/md";
-import Link from "next/link";
-import Image from "next/image";
 
 type Educator = {
   imageURL: string;
   name: string;
   email: string;
   designation: string;
+  experience?: string;
+  expertise?: string[];
+  rating?: number;
+  studentsCount?: number;
+  linkedin?: string;
+  twitter?: string;
+  github?: string;
+  bio?: string;
+  achievements?: string[];
 };
 
-const Educators: React.FC = () => {
-  return (
-    <div className="max-w-7xl mt-12  px-6 mx-auto">
-      <div>
-        <small className="">The Team</small>
-        <h2 className="mb-5 mt-2 font-extrabold text-5xl">
-          Our Educators
-        </h2>
-      </div>
-      {/*  */}
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={10}
-        pagination={{
-          clickable: true,
-        }}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
+// Enhanced educators data with additional info
+const enhancedEducatorsData = educatorsData.map((educator, index) => ({
+  ...educator,
+  experience: ["5+ years", "3+ years", "7+ years", "4+ years"][index % 4],
+  expertise: [
+    ["Programming", "Web Development", "AI/ML"],
+    ["Mobile Apps", "UI/UX", "React Native"],
+    ["Game Development", "Unity", "C#"],
+    ["Robotics", "IoT", "Hardware"],
+  ][index % 4],
+  rating: 4.8 + Math.random() * 0.2,
+  studentsCount: Math.floor(Math.random() * 500) + 100,
+  bio: [
+    "Passionate about teaching technology to young minds and creating innovative learning experiences.",
+    "Dedicated educator with expertise in mobile app development and interactive learning methodologies.",
+    "Game development specialist who loves bringing creativity and fun into the classroom.",
+    "Hardware enthusiast focused on making complex robotics concepts accessible to children.",
+  ][index % 4],
+  achievements: [
+    ["Google Certified Educator", "AWS Solutions Architect"],
+    ["React Native Expert", "Design Thinking Certificate"],
+    ["Unity Certified Developer", "Game Design Award Winner"],
+    ["Arduino Specialist", "IoT Innovation Award"],
+  ][index % 4],
+}));
 
-        modules={[Autoplay]}
-        loop={true}
-        breakpoints={{
-          0: {
-            slidesPerView: 1,
-            spaceBetween: 10,
-          },
-          750: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          1000: {
-            slidesPerView: 3,
-            spaceBetween: 40,
-          },
-          1500: {
-            slidesPerView: 4,
-            spaceBetween: 50,
-          },
-        }}
-        className="mySwiper shadow-none py-10"
-      >
-        {educatorsData?.length > 0 &&
-          educatorsData.map((user: Educator, index: number) => (
-            <SwiperSlide key={index} className="shadow-none py-10" >
-              <div className="flex flex-col  border border-blue-100 dark:border-blue-950 w-full justify-center mx-auto p-6  rounded-xl sm:px-12">
-                <Image
-                  src={user.imageURL}
-                  alt={`${user.name}'s profile`}
-                  width={300}
-                  height={100}
-                  className="w-32 h-32 mx-auto rounded-full aspect-square"
-                />
-                <div className="space-y-4 text-center divide-y">
-                  <div className="my-2 space-y-3">
-                    <h2 className="text-xl  font-semibold sm:text-lg">
-                      {user.name}
-                    </h2>
-                    <p className="flex items-center justify-center gap-2">
-                      <MdEmail />
-                      {user.email}
-                    </p>
-                    <div className="flex items-center justify-center gap-3 bg-blue-50 dark:bg-blue-950/80 mx-auto w-48 text-[#1883fc] rounded-lg">
-                      <PiCertificateFill />
-                      <span>{user.designation}</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-center pt-2 space-x-4 align-center">
-                    {/* Social Media Links */}
-                    <Link
-                      rel="noopener noreferrer"
-                      href="#"
-                      aria-label="GitHub"
-                      className="p-2 rounded-md "
-                    >
-                      <svg
-                        viewBox="0 0 496 512"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 fill-current"
-                      >
-                        <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
-                      </svg>
-                    </Link>
-                    <Link
-                      rel="noopener noreferrer"
-                      href="#"
-                      aria-label="Dribble"
-                      className="p-2 rounded-md "
-                    >
-                      <svg
-                        viewBox="0 0 512 512"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 fill-current"
-                      >
-                        <path d="M256 8C119.252 8 8 119.252 8 256s111.252 248 248 248 248-111.252 248-248S392.748 8 256 8zm163.97 114.366c29.503 36.046 47.369 81.957 47.835 131.955-6.984-1.477-77.018-15.682-147.502-6.818-5.752-14.041-11.181-26.393-18.617-41.614 78.321-31.977 113.818-77.482 118.284-83.523zM396.421 97.87c-3.81 5.427-35.697 48.286-111.021 76.519-34.712-63.776-73.185-116.168-79.04-124.008 67.176-16.193 137.966 1.27 190.061 47.489zm-230.48-33.25c5.585 7.659 43.438 60.116 78.537 122.509-99.087 26.313-186.36 25.934-195.834 25.809C62.38 147.205 106.678 92.573 165.941 64.62zM44.17 256.323c0-2.166.043-4.322.108-6.473 9.268.19 111.92 1.513 217.706-30.146 6.064 11.868 11.857 23.915 17.174 35.949-76.599 21.575-146.194 83.527-180.531 142.306C64.794 360.405 44.17 310.73 44.17 256.323zm81.807 167.113c22.127-45.233 82.178-103.622 167.579-132.756 29.74 77.283 42.039 142.053 45.189 160.638-68.112 29.013-150.015 21.053-212.768-27.882zm248.38 8.489c-2.171-12.886-13.446-74.897-41.152-151.033 66.38-10.626 124.7 6.768 131.947 9.055-9.442 58.941-43.273 109.844-90.795 141.978z"></path>
-                      </svg>
-                    </Link>
-                    <Link
-                      rel="noopener noreferrer"
-                      href="#"
-                      aria-label="Twitter"
-                      className="p-2 rounded-md "
-                    >
-                      <svg
-                        viewBox="0 0 512 512"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 fill-current"
-                      >
-                        <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
+const Educators: React.FC = () => {
+  const { language } = useLanguage();
+  const { theme } = useTheme();
+  const isClient = useIsClient();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const controls = useAnimation();
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [swiperInstance, setSwiperInstance] = useState(null);
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        duration: 0.5,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { scale: 0.9, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 120,
+        damping: 15,
+      },
+    },
+  };
+
+  return (
+    <div className="py-24 relative overflow-hidden">
+      {/* Enhanced Background Elements */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Dynamic grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              isClient && theme === "dark"
+                ? "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)"
+                : "radial-gradient(circle at 1px 1px, rgba(59,130,246,0.8) 1px, transparent 0)",
+            backgroundSize: "30px 30px",
+          }}
+        />
+
+        {/* Floating geometric shapes */}
+        <div className="absolute inset-0">
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{
+                width: Math.random() * 60 + 20 + "px",
+                height: Math.random() * 60 + 20 + "px",
+                top: Math.random() * 100 + "%",
+                left: Math.random() * 100 + "%",
+                background:
+                  isClient && theme === "dark"
+                    ? `linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1))`
+                    : `linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))`,
+                borderRadius: Math.random() > 0.5 ? "50%" : "20%",
+                filter: "blur(1px)",
+              }}
+              animate={{
+                y: [0, -20, 0],
+                x: [0, 10, 0],
+                opacity: [0.3, 0.7, 0.3],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 4,
+                repeat: Infinity,
+                repeatType: "reverse",
+                delay: Math.random() * 2,
+              }}
+            />
           ))}
-      </Swiper>
-      {/*  */}
+        </div>
+
+        {/* Large glowing orbs */}
+        <motion.div
+          className="absolute w-[50rem] h-[50rem] rounded-full blur-[150px]"
+          style={{
+            background:
+              isClient && theme === "dark"
+                ? "radial-gradient(circle, rgba(56, 189, 248, 0.08), transparent 70%)"
+                : "radial-gradient(circle, rgba(59, 130, 246, 0.04), transparent 70%)",
+            top: "-10%",
+            right: "-20%",
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.5, 0.7, 0.5],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+
+        <motion.div
+          className="absolute w-[45rem] h-[45rem] rounded-full blur-[140px]"
+          style={{
+            background:
+              isClient && theme === "dark"
+                ? "radial-gradient(circle, rgba(139, 92, 246, 0.08), transparent 70%)"
+                : "radial-gradient(circle, rgba(139, 92, 246, 0.04), transparent 70%)",
+            bottom: "-10%",
+            left: "-15%",
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.4, 0.6, 0.4],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 2,
+          }}
+        />
+
+        {/* Tech-inspired connecting lines */}
+        <svg
+          className="absolute w-full h-full opacity-5"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <motion.path
+            d="M10,20 Q30,10 50,20 T90,20"
+            stroke={isClient && theme === "dark" ? "#38bdf8" : "#3b82f6"}
+            strokeWidth="0.5"
+            fill="none"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{
+              pathLength: isInView ? 1 : 0,
+              opacity: isInView ? 1 : 0,
+            }}
+            transition={{ duration: 3, ease: "easeInOut" }}
+          />
+          <motion.path
+            d="M10,80 Q30,90 50,80 T90,80"
+            stroke={isClient && theme === "dark" ? "#a855f7" : "#8b5cf6"}
+            strokeWidth="0.5"
+            fill="none"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{
+              pathLength: isInView ? 1 : 0,
+              opacity: isInView ? 1 : 0,
+            }}
+            transition={{ duration: 3, delay: 0.5, ease: "easeInOut" }}
+          />
+        </svg>
+      </div>
+
+      <div className="max-w-7xl px-6 mx-auto relative z-10">
+        <motion.div
+          ref={ref}
+          variants={containerVariants}
+          initial="hidden"
+          animate={controls}
+        >
+          {/* Enhanced Header Section */}
+          <motion.div variants={itemVariants} className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-block mb-4"
+            >
+              <span className="bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-400 dark:to-orange-400 text-transparent bg-clip-text px-4 py-2 text-sm font-bold rounded-full border border-amber-200 dark:border-amber-700 flex items-center justify-center gap-2">
+                <RiTeamFill className="text-amber-500 dark:text-amber-300" />
+                {language === "en" ? "Meet The Team" : "টিমের সাথে পরিচিত হন"}
+              </span>
+            </motion.div>
+
+            <motion.h2
+              variants={itemVariants}
+              className="mb-6 font-extrabold text-4xl md:text-6xl bg-gradient-to-r from-amber-600 via-orange-500 to-red-500 dark:from-amber-400 dark:via-orange-400 dark:to-red-400 bg-clip-text text-transparent"
+            >
+              {language === "en"
+                ? "Our Expert Educators"
+                : "আমাদের দক্ষ শিক্ষকবৃন্দ"}
+            </motion.h2>
+
+            <motion.p
+              variants={itemVariants}
+              className="max-w-3xl mx-auto text-lg text-slate-600 dark:text-slate-300 mb-8"
+            >
+              {language === "en"
+                ? "Meet our passionate team of educators who bring years of industry experience and innovative teaching methods to inspire the next generation of tech innovators."
+                : "আমাদের উৎসাহী শিক্ষক দলের সাথে পরিচিত হন যারা পরবর্তী প্রজন্মের প্রযুক্তি উদ্ভাবকদের অনুপ্রাণিত করতে বছরের পর বছর শিল্প অভিজ্ঞতা এবং উদ্ভাবনী শিক্ষণ পদ্ধতি নিয়ে এসেছেন।"}
+            </motion.p>
+
+            {/* Team Stats */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-wrap justify-center gap-6 mb-8"
+            >
+              <TeamStat
+                icon={<FaUserGraduate />}
+                number="15+"
+                label={language === "en" ? "Expert Educators" : "দক্ষ শিক্ষক"}
+                color="blue"
+              />
+              <TeamStat
+                icon={<PiStarFill />}
+                number="4.9"
+                label={language === "en" ? "Average Rating" : "গড় রেটিং"}
+                color="amber"
+              />
+              <TeamStat
+                icon={<FaChalkboardTeacher />}
+                number="2000+"
+                label={
+                  language === "en" ? "Students Taught" : "শিক্ষার্থী শিক্ষা"
+                }
+                color="purple"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Enhanced Swiper Section */}
+          <motion.div variants={itemVariants} className="relative">
+            {/* Custom Navigation Dots */}
+            <div className="flex justify-center mb-8">
+              {enhancedEducatorsData.map((_, index) => (
+                <motion.button
+                  key={index}
+                  className="mx-1 w-3 h-3 rounded-full transition-all duration-300"
+                  style={{
+                    background:
+                      activeSlide === index
+                        ? isClient && theme === "dark"
+                          ? "linear-gradient(45deg, #38bdf8, #8b5cf6)"
+                          : "linear-gradient(45deg, #3b82f6, #8b5cf6)"
+                        : isClient && theme === "dark"
+                          ? "rgba(255, 255, 255, 0.3)"
+                          : "rgba(0, 0, 0, 0.2)",
+                  }}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => {
+                    if (swiperInstance) {
+                      swiperInstance.slideTo(index);
+                    }
+                  }}
+                />
+              ))}
+            </div>
+
+            <Swiper
+              onSwiper={setSwiperInstance}
+              onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+              slidesPerView={1}
+              spaceBetween={20}
+              centeredSlides={true}
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              modules={[Autoplay, Pagination]}
+              loop={true}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 30,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 40,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 50,
+                },
+              }}
+              className="py-12"
+            >
+              {enhancedEducatorsData.map(
+                (educator: Educator, index: number) => (
+                  <SwiperSlide key={index}>
+                    <EducatorCard educator={educator} index={index} />
+                  </SwiperSlide>
+                )
+              )}
+            </Swiper>
+          </motion.div>
+
+          {/* Call to Action Section */}
+          <motion.div variants={itemVariants} className="text-center mt-16">
+            <motion.div
+              className="inline-block p-8 rounded-2xl"
+              style={{
+                background:
+                  isClient && theme === "dark"
+                    ? "rgba(15, 23, 42, 0.6)"
+                    : "rgba(255, 255, 255, 0.7)",
+                backdropFilter: "blur(10px)",
+                border:
+                  isClient && theme === "dark"
+                    ? "1px solid rgba(56, 189, 248, 0.2)"
+                    : "1px solid rgba(219, 234, 254, 0.8)",
+              }}
+              whileHover={{
+                y: -5,
+                boxShadow:
+                  isClient && theme === "dark"
+                    ? "0 25px 50px -12px rgba(56, 189, 248, 0.25)"
+                    : "0 25px 50px -12px rgba(59, 130, 246, 0.15)",
+              }}
+            >
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <MdOutlineWavingHand className="text-3xl text-yellow-500" />
+                </motion.div>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white">
+                  {language === "en"
+                    ? "Want to Join Our Team?"
+                    : "আমাদের দলে যোগ দিতে চান?"}
+                </h3>
+              </div>
+              <p className="text-slate-600 dark:text-slate-300 mb-6 max-w-lg mx-auto">
+                {language === "en"
+                  ? "We're always looking for passionate educators who want to make a difference in children's lives through technology education."
+                  : "আমরা সর্বদা উৎসাহী শিক্ষকদের খুঁজছি যারা প্রযুক্তি শিক্ষার মাধ্যমে শিশুদের জীবনে পরিবর্তন আনতে চান।"}
+              </p>
+              <Link href="/careers">
+                <motion.button
+                  className="px-6 py-3 rounded-full font-medium text-white"
+                  style={{
+                    background:
+                      isClient && theme === "dark"
+                        ? "linear-gradient(45deg, #38bdf8, #8b5cf6)"
+                        : "linear-gradient(45deg, #3b82f6, #8b5cf6)",
+                  }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {language === "en" ? "Apply Now" : "এখনই আবেদন করুন"}
+                </motion.button>
+              </Link>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
     </div>
+  );
+};
+
+// Enhanced Educator Card Component
+const EducatorCard = ({ educator, index }) => {
+  const { theme } = useTheme();
+  const { language } = useLanguage();
+  const isClient = useIsClient();
+  const [isHovered, setIsHovered] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  return (
+    <motion.div
+      className="relative group h-full"
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{ y: -10 }}
+      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+    >
+      <div
+        className="rounded-3xl overflow-hidden h-full relative"
+        style={{
+          background:
+            isClient && theme === "dark"
+              ? "rgba(15, 23, 42, 0.7)"
+              : "rgba(255, 255, 255, 0.9)",
+          backdropFilter: "blur(15px)",
+          border:
+            isClient && theme === "dark"
+              ? "1px solid rgba(56, 189, 248, 0.3)"
+              : "1px solid rgba(219, 234, 254, 0.8)",
+          boxShadow: isHovered
+            ? isClient && theme === "dark"
+              ? "0 25px 50px -12px rgba(56, 189, 248, 0.25), 0 0 0 1px rgba(56, 189, 248, 0.1)"
+              : "0 25px 50px -12px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.1)"
+            : "0 10px 30px -5px rgba(0, 0, 0, 0.1)",
+          transition: "all 0.3s ease",
+        }}
+      >
+        {/* Animated top border */}
+        <motion.div
+          className="absolute top-0 left-0 right-0 h-1"
+          style={{
+            background: `linear-gradient(90deg, 
+              ${["#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"][index % 4]}, 
+              ${["#8b5cf6", "#f59e0b", "#ef4444", "#10b981"][index % 4]})`,
+          }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1, delay: index * 0.1 }}
+        />
+
+        {/* Profile Image Section */}
+        <div className="relative p-6 text-center">
+          <motion.div
+            className="relative inline-block"
+            whileHover={{ scale: 1.05 }}
+          >
+            {/* Glowing ring around image */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `conic-gradient(from 0deg, 
+                  ${["#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"][index % 4]}, 
+                  ${["#8b5cf6", "#f59e0b", "#ef4444", "#10b981"][index % 4]}, 
+                  ${["#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"][index % 4]})`,
+                padding: "3px",
+                borderRadius: "50%",
+              }}
+              animate={{ rotate: 360 }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              <div
+                className="w-full h-full rounded-full"
+                style={{
+                  background:
+                    isClient && theme === "dark" ? "#0f172a" : "#ffffff",
+                }}
+              />
+            </motion.div>
+
+            <Image
+              src={educator.imageURL}
+              alt={educator.name}
+              width={120}
+              height={120}
+              className="relative z-10 w-24 h-24 md:w-28 md:h-28 rounded-full object-cover"
+            />
+
+            {/* Verified badge */}
+            <motion.div
+              className="absolute -bottom-1 -right-1 z-20"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 300 }}
+            >
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center"
+                style={{
+                  background: `linear-gradient(45deg, 
+                    ${["#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"][index % 4]}, 
+                    ${["#8b5cf6", "#f59e0b", "#ef4444", "#10b981"][index % 4]})`,
+                }}
+              >
+                <MdVerified className="text-white text-sm" />
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Floating elements around the image */}
+          <motion.div
+            className="absolute top-4 right-4"
+            animate={{
+              y: [0, -5, 0],
+              opacity: [0.7, 1, 0.7],
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <HiSparkles className="text-yellow-500 text-lg" />
+          </motion.div>
+
+          <motion.div
+            className="absolute top-8 left-4"
+            animate={{
+              rotate: [0, 15, 0],
+              opacity: [0.6, 1, 0.6],
+            }}
+            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+          >
+            <FaBrain className="text-purple-500 text-sm" />
+          </motion.div>
+        </div>
+
+        {/* Content Section */}
+        <div className="px-6 pb-6">
+          <motion.h3
+            className="text-xl font-bold text-slate-800 dark:text-white mb-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {educator.name}
+          </motion.h3>
+
+          <motion.p
+            className="text-sm text-slate-600 dark:text-slate-300 mb-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            {educator.designation}
+          </motion.p>
+
+          {/* Rating and Experience */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-1">
+              <PiStarFill className="text-yellow-500 text-sm" />
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                {educator.rating?.toFixed(1)}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <PiGraduationCapFill className="text-blue-500 text-sm" />
+              <span className="text-xs text-slate-600 dark:text-slate-400">
+                {educator.experience}
+              </span>
+            </div>
+          </div>
+
+          {/* Expertise Tags */}
+          <div className="flex flex-wrap gap-1 mb-4">
+            {educator.expertise?.slice(0, 2).map((skill, i) => (
+              <motion.span
+                key={i}
+                className="px-2 py-1 text-xs rounded-full"
+                style={{
+                  background:
+                    isClient && theme === "dark"
+                      ? "rgba(56, 189, 248, 0.2)"
+                      : "rgba(59, 130, 246, 0.1)",
+                  color: isClient && theme === "dark" ? "#38bdf8" : "#3b82f6",
+                }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+              >
+                {skill}
+              </motion.span>
+            ))}
+          </div>
+
+          {/* Contact Actions */}
+          <div className="flex items-center justify-between">
+            <Link href={`mailto:${educator.email}`}>
+              <motion.button
+                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm"
+                style={{
+                  background:
+                    isClient && theme === "dark"
+                      ? "rgba(15, 23, 42, 0.8)"
+                      : "rgba(255, 255, 255, 0.8)",
+                  border:
+                    isClient && theme === "dark"
+                      ? "1px solid rgba(56, 189, 248, 0.3)"
+                      : "1px solid rgba(219, 234, 254, 0.8)",
+                }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <MdEmail className="text-blue-500" />
+                <span className="text-slate-700 dark:text-slate-300 text-xs">
+                  {language === "en" ? "Contact" : "যোগাযোগ"}
+                </span>
+              </motion.button>
+            </Link>
+
+            <motion.button
+              onClick={() => setShowDetails(!showDetails)}
+              className="p-2 rounded-full"
+              style={{
+                background: `linear-gradient(45deg, 
+                  ${["#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"][index % 4]}, 
+                  ${["#8b5cf6", "#f59e0b", "#ef4444", "#10b981"][index % 4]})`,
+              }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <RiLightbulbFlashLine className="text-white text-sm" />
+            </motion.button>
+          </div>
+
+          {/* Expandable Details */}
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{
+              height: showDetails ? "auto" : 0,
+              opacity: showDetails ? 1 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-700">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">
+                {educator.bio}
+              </p>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <RiStarSmileFill className="text-green-500 text-sm" />
+                  <span className="text-xs text-slate-700 dark:text-slate-300">
+                    {educator.studentsCount}+{" "}
+                    {language === "en" ? "students" : "শিক্ষার্থী"}
+                  </span>
+                </div>
+
+                {educator.achievements?.slice(0, 1).map((achievement, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <PiMedalFill className="text-amber-500 text-sm" />
+                    <span className="text-xs text-slate-700 dark:text-slate-300">
+                      {achievement}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Hover overlay effect */}
+        <motion.div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          style={{
+            background: `linear-gradient(135deg, 
+              ${["rgba(59, 130, 246, 0.1)", "rgba(139, 92, 246, 0.1)", "rgba(245, 158, 11, 0.1)", "rgba(239, 68, 68, 0.1)"][index % 4]}, 
+              transparent 70%)`,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        />
+      </div>
+    </motion.div>
+  );
+};
+
+// Team Statistics Component
+const TeamStat = ({ icon, number, label, color }) => {
+  const { theme } = useTheme();
+  const isClient = useIsClient();
+
+  const getColorClasses = (color) => {
+    switch (color) {
+      case "blue":
+        return {
+          iconBg:
+            isClient && theme === "dark"
+              ? "rgba(59, 130, 246, 0.2)"
+              : "rgba(59, 130, 246, 0.1)",
+          iconColor: "#3b82f6",
+          textColor: isClient && theme === "dark" ? "#60a5fa" : "#2563eb",
+        };
+      case "amber":
+        return {
+          iconBg:
+            isClient && theme === "dark"
+              ? "rgba(245, 158, 11, 0.2)"
+              : "rgba(245, 158, 11, 0.1)",
+          iconColor: "#f59e0b",
+          textColor: isClient && theme === "dark" ? "#fbbf24" : "#d97706",
+        };
+      case "purple":
+        return {
+          iconBg:
+            isClient && theme === "dark"
+              ? "rgba(139, 92, 246, 0.2)"
+              : "rgba(139, 92, 246, 0.1)",
+          iconColor: "#8b5cf6",
+          textColor: isClient && theme === "dark" ? "#a78bfa" : "#7c3aed",
+        };
+      default:
+        return {
+          iconBg:
+            isClient && theme === "dark"
+              ? "rgba(59, 130, 246, 0.2)"
+              : "rgba(59, 130, 246, 0.1)",
+          iconColor: "#3b82f6",
+          textColor: isClient && theme === "dark" ? "#60a5fa" : "#2563eb",
+        };
+    }
+  };
+
+  const colors = getColorClasses(color);
+
+  return (
+    <motion.div
+      className="flex items-center gap-3 px-4 py-3 rounded-xl"
+      style={{
+        background:
+          isClient && theme === "dark"
+            ? "rgba(15, 23, 42, 0.5)"
+            : "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(10px)",
+        border:
+          isClient && theme === "dark"
+            ? "1px solid rgba(56, 189, 248, 0.2)"
+            : "1px solid rgba(219, 234, 254, 0.8)",
+      }}
+      whileHover={{
+        y: -3,
+        boxShadow:
+          isClient && theme === "dark"
+            ? "0 10px 25px -5px rgba(0, 0, 0, 0.3)"
+            : "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <div className="p-2 rounded-full" style={{ background: colors.iconBg }}>
+        <span style={{ color: colors.iconColor }} className="text-lg">
+          {icon}
+        </span>
+      </div>
+      <div>
+        <div className="text-lg font-bold" style={{ color: colors.textColor }}>
+          {number}
+        </div>
+        <div className="text-xs text-slate-600 dark:text-slate-400">
+          {label}
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
