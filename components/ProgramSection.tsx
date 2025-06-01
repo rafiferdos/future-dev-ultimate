@@ -208,14 +208,11 @@ const ProgramSection: React.FC = () => {
 
       {/* Right Section with Text and Buttons */}
       <motion.div className="flex pl-6 space-y-8 md:px-0 col-span-1 flex-col justify-center z-10">
+        {/* FIXED: Changed from motion.h2 containing h2 to just motion.h2 */}
         <motion.h2
-          className="font-bold text-3xl lg:text-5xl mb-4 bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 bg-clip-text text-transparent"
+          className="font-bold text-3xl lg:text-5xl bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 bg-clip-text text-transparent"
           variants={itemVariants}
         >
-          <motion.h2
-            className="font-bold text-3xl lg:text-5xl bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 bg-clip-text text-transparent"
-            variants={itemVariants}
-          ></motion.h2>
           {language === "en" ? "Our Programs" : "আমাদের প্রোগ্রামসমূহ"}
         </motion.h2>
 
