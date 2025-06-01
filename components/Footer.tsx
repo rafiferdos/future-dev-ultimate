@@ -1,7 +1,6 @@
 "use client";
 import { siteConfig } from "@/config/site";
 import { useLanguage } from "@/context/LanguageContext";
-import { useIsClient } from "@/hooks/useIsClient";
 import Logo from "@/public/logo.png";
 import { Tooltip } from "@heroui/tooltip";
 import { motion, useAnimation, useInView } from "framer-motion";
@@ -46,12 +45,17 @@ const PARTICLE_POSITIONS = [
 
 const Footer: React.FC = () => {
   const { language } = useLanguage();
-  const { theme } = useTheme();
-  const isClient = useIsClient();
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.2 });
   const controls = useAnimation();
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Ensure component is mounted before rendering theme-dependent content
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isInView) {
@@ -151,17 +155,11 @@ const Footer: React.FC = () => {
     return icons[iconIndex];
   };
 
-  if (!isClient) {
+  // Don't render theme-dependent content until mounted
+  if (!mounted) {
     return (
-      <footer className="relative overflow-hidden">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
-          }}
-        />
-        <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-16">
+      <footer className="relative overflow-hidden bg-slate-50 dark:bg-slate-900">
+        <div className="px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
               <div className="lg:col-span-2">
@@ -184,21 +182,6 @@ const Footer: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                <p className="text-slate-600 mb-8 max-w-md leading-relaxed text-lg">
-                  {language === "en"
-                    ? "Empowering the next generation with innovative technology education and creative learning experiences that prepare students for tomorrow's digital world."
-                    : "উদ্ভাবনী প্রযুক্তি শিক্ষা এবং সৃজনশীল শেখার অভিজ্ঞতার মাধ্যমে পরবর্তী প্রজন্মকে আগামীর ডিজিটাল বিশ্বের জন্য প্রস্তুত করা।"}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-800 mb-6">
-                  {language === "en" ? "Quick Links" : "দ্রুত লিংক"}
-                </h3>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-800 mb-6">
-                  {language === "en" ? "Legal & Support" : "আইনগত ও সাহায্য"}
-                </h3>
               </div>
             </div>
           </div>
@@ -207,6 +190,8 @@ const Footer: React.FC = () => {
     );
   }
 
+  const isDark = resolvedTheme === "dark";
+
   return (
     <>
       {/* Scroll to Top Button */}
@@ -214,9 +199,7 @@ const Footer: React.FC = () => {
         className="fixed bottom-8 right-8 z-50 p-4 rounded-full shadow-lg"
         style={{
           background:
-            theme === "dark"
-              ? "linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.9))"
-              : "linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.9))",
+            "linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.9))",
           backdropFilter: "blur(20px)",
           border: "1px solid rgba(255, 255, 255, 0.2)",
         }}
@@ -237,64 +220,33 @@ const Footer: React.FC = () => {
 
       {/* Footer Section */}
       <footer className="relative overflow-hidden">
-        {/* Enhanced Background */}
-        <div className="absolute inset-0 z-0">
-          {/* Primary gradient background */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                theme === "dark"
-                  ? "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)"
-                  : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
-            }}
-          />
+        {/* Background */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: isDark
+              ? "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)"
+              : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
+          }}
+        />
 
-          {/* Animated gradient overlay */}
-          <motion.div
-            className="absolute inset-0"
-            style={{
-              background:
-                theme === "dark"
-                  ? "radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)"
-                  : "radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%)",
-            }}
-            animate={{
-              opacity: [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-
-          {/* Fixed positioned floating particles */}
-          <div className="absolute inset-0">
-            {PARTICLE_POSITIONS.map((particle, i) => (
-              <motion.div
-                key={i}
-                className="absolute"
-                style={{
-                  top: `${particle.top}%`,
-                  left: `${particle.left}%`,
-                }}
-                animate={{
-                  y: [0, -20, 0],
-                  opacity: [0.1, 0.4, 0.1],
-                  scale: [0.8, 1.2, 0.8],
-                }}
-                transition={{
-                  duration: 6 + (i % 4),
-                  repeat: Infinity,
-                  delay: i * 0.3,
-                }}
-              >
-                {getParticleIcon(particle.icon)}
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        {/* Subtle animated overlay */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: isDark
+              ? "radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)"
+              : "radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.04) 0%, transparent 50%)",
+          }}
+          animate={{
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
 
         {/* Main Footer Content */}
         <motion.div
@@ -315,15 +267,7 @@ const Footer: React.FC = () => {
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <motion.div
-                      className="relative"
-                      animate={{ rotate: [0, 360] }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
+                    <div className="relative">
                       <Image
                         src={Logo}
                         alt="Future Dev Logo"
@@ -331,8 +275,8 @@ const Footer: React.FC = () => {
                         height={56}
                         className="rounded-2xl"
                       />
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse" />
-                    </motion.div>
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
+                    </div>
                     <div>
                       <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                         {siteConfig.name}
@@ -361,19 +305,19 @@ const Footer: React.FC = () => {
                     icon={<MdPhone />}
                     text="+8801706-276447"
                     href="tel:+8801706-276447"
-                    gradient="from-emerald-500 to-teal-500"
+                    color="#10b981"
                   />
                   <ContactItem
                     icon={<MdEmail />}
                     text="futuredev@gmail.com"
                     href="mailto:futuredev@gmail.com"
-                    gradient="from-blue-500 to-cyan-500"
+                    color="#3b82f6"
                   />
                   <ContactItem
                     icon={<MdLocationOn />}
                     text="Green Corner, Green Road, Dhaka 1205"
                     href="#"
-                    gradient="from-purple-500 to-pink-500"
+                    color="#8b5cf6"
                   />
                 </motion.div>
               </motion.div>
@@ -395,10 +339,7 @@ const Footer: React.FC = () => {
                         href={link.href}
                         className="group flex items-center gap-3 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
                       >
-                        <motion.div
-                          className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
-                          whileHover={{ scale: 1.5 }}
-                        />
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
                         <span className="group-hover:font-medium transition-all duration-200">
                           {link.label}
                         </span>
@@ -425,10 +366,7 @@ const Footer: React.FC = () => {
                         href={link.href}
                         className="group flex items-center gap-3 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300"
                       >
-                        <motion.div
-                          className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
-                          whileHover={{ scale: 1.5 }}
-                        />
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
                         <span className="group-hover:font-medium transition-all duration-200">
                           {link.label}
                         </span>
@@ -482,7 +420,17 @@ const Footer: React.FC = () => {
 };
 
 // Contact Item Component
-const ContactItem = ({ icon, text, href, gradient }) => {
+const ContactItem = ({
+  icon,
+  text,
+  href,
+  color,
+}: {
+  icon: React.ReactNode;
+  text: string;
+  href: string;
+  color: string;
+}) => {
   return (
     <motion.div
       whileHover={{ x: 8, scale: 1.02 }}
@@ -493,7 +441,8 @@ const ContactItem = ({ icon, text, href, gradient }) => {
         className="group flex items-center gap-4 text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white transition-all duration-300"
       >
         <motion.div
-          className={`p-3 rounded-xl bg-gradient-to-r ${gradient} shadow-lg`}
+          className="p-3 rounded-xl shadow-lg"
+          style={{ backgroundColor: color }}
           whileHover={{
             scale: 1.1,
             rotate: 5,
@@ -511,7 +460,19 @@ const ContactItem = ({ icon, text, href, gradient }) => {
 };
 
 // Social Link Component
-const SocialLink = ({ icon, href, label, color, index }) => {
+const SocialLink = ({
+  icon,
+  href,
+  label,
+  color,
+  index,
+}: {
+  icon: React.ReactNode;
+  href: string;
+  label: string;
+  color: string;
+  index: number;
+}) => {
   return (
     <Tooltip content={label}>
       <motion.div
@@ -530,8 +491,6 @@ const SocialLink = ({ icon, href, label, color, index }) => {
             whileHover={{
               scale: 1.15,
               y: -5,
-              backgroundColor: `${color}20`,
-              borderColor: `${color}40`,
             }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -544,18 +503,6 @@ const SocialLink = ({ icon, href, label, color, index }) => {
             >
               {icon}
             </motion.span>
-
-            {/* Glow effect */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl"
-              style={{
-                background: `radial-gradient(circle, ${color}30, transparent 70%)`,
-                filter: "blur(8px)",
-              }}
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            />
           </motion.div>
         </Link>
       </motion.div>
