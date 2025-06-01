@@ -23,7 +23,7 @@ import {
   FaSpaceShuttle,
   FaUserAstronaut,
 } from "react-icons/fa";
-import { HiMoon, HiSun } from "react-icons/hi2";
+import { HiMoon } from "react-icons/hi2";
 import { IoCode, IoGameController, IoRocket, IoStar } from "react-icons/io5";
 
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -42,31 +42,35 @@ export const Navbar = () => {
   const [hoverButton, setHoverButton] = useState<string | null>(null);
   const pathname = usePathname();
   const { language, t } = useLanguage();
-  const { theme } = useTheme();
 
-  // Add this to ensure client-side only rendering for elements causing hydration issues
+  // Always start with dark theme on server-side for consistent hydration
+  const { theme: themeFromContext } = useTheme();
+  const [theme, setTheme] = useState("dark");
   const isClient = useIsClient();
 
-  // Use refs to ensure stable values across renders for random numbers
-  const particlePositionsRef = useRef<number[][]>(
-    Array(5)
-      .fill(0)
-      .map(() => [
-        45 + Math.floor(Math.random() * 10),
-        -20 + Math.floor(Math.random() * 40),
-        -30 - Math.floor(Math.random() * 20),
-      ])
-  );
+  // Only update theme after client-side hydration
+  useEffect(() => {
+    if (isClient && themeFromContext) {
+      setTheme(themeFromContext);
+    }
+  }, [isClient, themeFromContext]);
 
-  const registerParticlesRef = useRef<number[][]>(
-    Array(5)
-      .fill(0)
-      .map(() => [
-        20 + Math.floor(Math.random() * 15),
-        (Math.random() - 0.5) * 50,
-        (Math.random() - 1) * 40,
-      ])
-  );
+  // Replace random-generating refs with static values to avoid hydration mismatches
+  const particlePositionsRef = useRef([
+    [45, -20, -30],
+    [50, -15, -35],
+    [55, -25, -40],
+    [48, -18, -32],
+    [52, -22, -38],
+  ]);
+
+  const registerParticlesRef = useRef([
+    [20, 15, -20],
+    [25, -15, -30],
+    [30, 20, -25],
+    [35, -10, -15],
+    [28, 12, -35],
+  ]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,15 +110,11 @@ export const Navbar = () => {
       className={clsx(
         "transition-all duration-500 py-3 z-50",
         scrolled
-          ? theme === "dark"
-            ? "bg-gradient-to-r from-blue-950/95 via-indigo-950/95 to-blue-900/95 shadow-lg shadow-blue-900/30"
-            : "bg-gradient-to-r from-white/90 via-blue-50/90 to-indigo-50/90 shadow-lg shadow-blue-200/30 border-b border-blue-100"
-          : theme === "dark"
-            ? "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80"
-            : "bg-gradient-to-r from-white/80 via-blue-50/80 to-indigo-50/80 backdrop-blur-sm"
+          ? "bg-gradient-to-r from-blue-950/95 via-indigo-950/95 to-blue-900/95 shadow-lg shadow-blue-900/30"
+          : "bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-blue-900/80"
       )}
     >
-      {/* Only render client-side animations after hydration */}
+      {/* Background animations - client-side only */}
       {isClient && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -156,41 +156,17 @@ export const Navbar = () => {
         </div>
       )}
 
-      {/* Logo and brand - theme aware */}
+      {/* Logo and brand - with consistent dark styling for server render */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className="relative"
-          >
+          <div className="relative">
             <NextLink
               className="flex justify-start items-center gap-3"
               href="/"
             >
               <div className="relative">
-                {isClient && (
-                  <motion.div
-                    className={clsx(
-                      "absolute -inset-1 rounded-full bg-gradient-to-r blur-sm",
-                      theme === "dark"
-                        ? "from-cyan-400 to-blue-500 opacity-70"
-                        : "from-cyan-300 to-blue-400 opacity-60"
-                    )}
-                    animate={{
-                      scale: [1, 1.1, 1],
-                      opacity:
-                        theme === "dark" ? [0.5, 0.7, 0.5] : [0.4, 0.6, 0.4],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                )}
-                <div
-                  className={clsx(
-                    "relative rounded-full p-1.5",
-                    theme === "dark" ? "bg-blue-800" : "bg-white shadow-inner"
-                  )}
-                >
+                {/* Logo container - always dark for initial render */}
+                <div className="relative rounded-full p-1.5 bg-blue-800">
                   <Image
                     alt="CodePy logo"
                     className="w-10 h-10 rounded-full"
@@ -201,12 +177,11 @@ export const Navbar = () => {
                 {/* Orbiting Python logo - client-side only */}
                 {isClient && (
                   <motion.div
-                    className={clsx(
-                      "absolute -top-1 -right-1 rounded-full p-0.5 shadow-lg z-10 border-2",
-                      theme === "dark"
-                        ? "bg-yellow-400 text-blue-900 border-blue-900/30"
-                        : "bg-yellow-400 text-blue-700 border-blue-700/30"
-                    )}
+                    className="absolute -top-1 -right-1 rounded-full p-0.5 shadow-lg z-10 border-2 bg-yellow-400 text-blue-900 border-blue-900/30"
+                    style={{
+                      width: "1.3rem",
+                      height: "1.3rem",
+                    }}
                     animate={{
                       rotate: [0, 360],
                     }}
@@ -215,118 +190,31 @@ export const Navbar = () => {
                       repeat: Infinity,
                       ease: "linear",
                     }}
-                    style={{
-                      transformOrigin: "center center",
-                      width: "1.3rem",
-                      height: "1.3rem",
-                    }}
                   >
                     <FaPython className="w-full h-full" />
                   </motion.div>
                 )}
               </div>
 
+              {/* Logo text - with dark theme styling for server render */}
               <div>
-                <motion.p
-                  className={clsx(
-                    "font-bold text-2xl tracking-tight leading-none",
-                    theme === "dark" ? "text-white" : "text-blue-900"
-                  )}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {isClient ? (
-                    <>
-                      <motion.span
-                        className={
-                          theme === "dark" ? "text-cyan-300" : "text-cyan-600"
-                        }
-                        animate={{
-                          textShadow:
-                            theme === "dark"
-                              ? [
-                                  "0 0 8px rgba(103,232,249,0)",
-                                  "0 0 15px rgba(103,232,249,0.5)",
-                                  "0 0 8px rgba(103,232,249,0)",
-                                ]
-                              : [
-                                  "0 0 8px rgba(8,145,178,0)",
-                                  "0 0 15px rgba(8,145,178,0.3)",
-                                  "0 0 8px rgba(8,145,178,0)",
-                                ],
-                        }}
-                        transition={{ duration: 2.5, repeat: Infinity }}
-                      >
-                        {language === "en" ? "Code" : "কোড"}
-                      </motion.span>
-                      <motion.span
-                        className={
-                          theme === "dark"
-                            ? "text-yellow-300"
-                            : "text-yellow-500"
-                        }
-                        animate={{
-                          textShadow:
-                            theme === "dark"
-                              ? [
-                                  "0 0 8px rgba(250,204,21,0)",
-                                  "0 0 15px rgba(250,204,21,0.5)",
-                                  "0 0 8px rgba(250,204,21,0)",
-                                ]
-                              : [
-                                  "0 0 8px rgba(234,179,8,0)",
-                                  "0 0 15px rgba(234,179,8,0.3)",
-                                  "0 0 8px rgba(234,179,8,0)",
-                                ],
-                        }}
-                        transition={{
-                          duration: 2.5,
-                          delay: 0.5,
-                          repeat: Infinity,
-                        }}
-                      >
-                        {language === "en" ? "Py" : "পাই"}
-                      </motion.span>
-                    </>
-                  ) : (
-                    <span>
-                      <span
-                        className={
-                          theme === "dark" ? "text-cyan-300" : "text-cyan-600"
-                        }
-                      >
-                        {language === "en" ? "Code" : "কোড"}
-                      </span>
-                      <span
-                        className={
-                          theme === "dark"
-                            ? "text-yellow-300"
-                            : "text-yellow-500"
-                        }
-                      >
-                        {language === "en" ? "Py" : "পাই"}
-                      </span>
-                    </span>
-                  )}
-                </motion.p>
-                <motion.p
-                  className={clsx(
-                    "text-xs leading-none",
-                    theme === "dark" ? "text-blue-200" : "text-blue-700"
-                  )}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
-                >
+                <p className="font-bold text-2xl tracking-tight leading-none text-white">
+                  <span className="text-cyan-300">
+                    {language === "en" ? "Code" : "কোড"}
+                  </span>
+                  <span className="text-yellow-300">
+                    {language === "en" ? "Py" : "পাই"}
+                  </span>
+                </p>
+                <p className="text-xs leading-none text-blue-200">
                   {t("siteTagline", "")}
-                </motion.p>
+                </p>
               </div>
             </NextLink>
-          </motion.div>
+          </div>
         </NavbarBrand>
 
-        {/* Desktop Navigation - theme aware */}
+        {/* Desktop Navigation - with consistent initial styling */}
         <div className="hidden lg:flex gap-1 justify-start ml-8">
           {siteConfig.navItems.map((item, i) => {
             const isActive = pathname === item.href;
@@ -357,42 +245,11 @@ export const Navbar = () => {
                       className={clsx(
                         "px-4 py-2 rounded-full flex items-center gap-2 transition-all relative",
                         isActive
-                          ? theme === "dark"
-                            ? "bg-white/15 text-white font-medium"
-                            : "bg-blue-100 text-blue-800 font-medium"
-                          : theme === "dark"
-                            ? "text-white/90 hover:bg-white/10"
-                            : "text-blue-800 hover:bg-blue-50"
+                          ? "bg-white/15 text-white font-medium"
+                          : "text-white/90 hover:bg-white/10"
                       )}
                       href={item.href}
                     >
-                      {/* Animated background for active item */}
-                      {isActive && isClient && (
-                        <motion.div
-                          className={clsx(
-                            "absolute inset-0 rounded-full -z-10",
-                            theme === "dark"
-                              ? "bg-blue-500/20"
-                              : "bg-blue-200/70"
-                          )}
-                          animate={{
-                            boxShadow:
-                              theme === "dark"
-                                ? [
-                                    "0 0 0 0 rgba(59, 130, 246, 0)",
-                                    "0 0 0 5px rgba(59, 130, 246, 0.3)",
-                                    "0 0 0 0 rgba(59, 130, 246, 0)",
-                                  ]
-                                : [
-                                    "0 0 0 0 rgba(147, 197, 253, 0)",
-                                    "0 0 0 5px rgba(147, 197, 253, 0.3)",
-                                    "0 0 0 0 rgba(147, 197, 253, 0)",
-                                  ],
-                          }}
-                          transition={{ duration: 2.5, repeat: Infinity }}
-                        />
-                      )}
-
                       {/* Icon with bounce effect on hover */}
                       <motion.div
                         whileHover={{ scale: 1.15 }}
@@ -403,7 +260,7 @@ export const Navbar = () => {
 
                       {itemLabel}
 
-                      {/* Active indicator with animation */}
+                      {/* Active indicator */}
                       {isActive && isClient && (
                         <motion.div
                           animate={{
@@ -428,7 +285,7 @@ export const Navbar = () => {
         </div>
       </NavbarContent>
 
-      {/* Right-side controls - Desktop with improved theme toggle */}
+      {/* Right-side controls - with consistent initial dark styling */}
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
@@ -437,391 +294,100 @@ export const Navbar = () => {
           {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Theme Toggle - Fixed height and alignment */}
-          {isClient ? (
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center"
-            >
-              <button
-                className={clsx(
-                  "h-9 w-9 flex items-center justify-center rounded-full",
-                  theme === "dark"
-                    ? "bg-blue-800/80 border border-blue-700"
-                    : "bg-white shadow-inner border border-blue-200"
-                )}
-              >
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <motion.div
-                    className="absolute inset-0 opacity-50 rounded-full"
-                    animate={{
-                      background:
-                        theme === "dark"
-                          ? [
-                              "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                              "radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                              "radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%)",
-                            ]
-                          : [
-                              "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                              "radial-gradient(circle at 80% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                              "radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.15) 0%, transparent 60%)",
-                            ],
-                    }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                  />
-                  {theme === "dark" ? (
-                    <HiMoon className="w-5 h-5 text-cyan-300 relative z-10" />
-                  ) : (
-                    <HiSun className="w-5 h-5 text-yellow-500 relative z-10" />
-                  )}
-                  <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-                </div>
-              </button>
-            </motion.div>
-          ) : (
-            <div
-              className={clsx(
-                "h-9 w-9 flex items-center justify-center rounded-full",
-                theme === "dark"
-                  ? "bg-blue-800/80 border border-blue-700"
-                  : "bg-white shadow-inner border border-blue-200"
-              )}
-            >
-              {theme === "dark" ? (
-                <HiMoon className="w-5 h-5 text-cyan-300" />
-              ) : (
-                <HiSun className="w-5 h-5 text-yellow-500" />
-              )}
+          {/* Theme Toggle with consistent dark styling for server render */}
+          <div className="h-9 w-9 flex items-center justify-center rounded-full bg-blue-800/80 border border-blue-700">
+            <HiMoon className="w-5 h-5 text-cyan-300" />
+            {isClient && (
               <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Parent portal button - Fixed height and alignment */}
-          <motion.div
-            whileHover={{
-              scale: 1.05,
-              y: -2,
-            }}
-            whileTap={{ scale: 0.95 }}
-            onHoverStart={() => setHoverButton("parent")}
-            onHoverEnd={() => setHoverButton(null)}
-            className="flex items-center h-9"
-          >
+          {/* Parent portal button with consistent dark styling */}
+          <div className="flex items-center h-9">
             <Button
               as={Link}
               href="/parent-portal"
-              className={clsx(
-                "border-0 shadow-md h-9 px-3 flex items-center",
-                theme === "dark"
-                  ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white"
-                  : "bg-gradient-to-r from-teal-400 to-cyan-500 text-white"
-              )}
+              className="border-0 shadow-md h-9 px-3 flex items-center bg-gradient-to-r from-teal-500 to-cyan-600 text-white"
               radius="full"
               size="sm"
             >
-              {isClient && (
-                <AnimatePresence>
-                  {hoverButton === "parent" && (
-                    <>
-                      {[0, 1, 2].map((i) => {
-                        const posData = particlePositionsRef.current[i];
-                        return (
-                          <motion.div
-                            key={`parent-particle-${i}`}
-                            className={clsx(
-                              "absolute w-2 h-2 rounded-full",
-                              theme === "dark" ? "bg-cyan-200" : "bg-cyan-100"
-                            )}
-                            initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                            animate={{
-                              opacity: [0, 1, 0],
-                              scale: [0, 1, 0.5],
-                              x: [0, posData[1]],
-                              y: [0, posData[2]],
-                            }}
-                            exit={{ opacity: 0, scale: 0 }}
-                            transition={{ duration: 0.8 }}
-                            style={{
-                              left: `${posData[0]}%`,
-                              top: "50%",
-                            }}
-                          />
-                        );
-                      })}
-                    </>
-                  )}
-                </AnimatePresence>
-              )}
-
               <div className="flex items-center gap-1.5">
-                <FaRobot
-                  className={
-                    theme === "dark" ? "text-cyan-200" : "text-cyan-100"
-                  }
-                />
+                <FaRobot className="text-cyan-200" />
                 <span>{t("auth", "parentAccess")}</span>
               </div>
             </Button>
-          </motion.div>
+          </div>
         </NavbarItem>
 
-        {/* Registration button with animation - theme aware */}
+        {/* Registration button */}
         <NavbarItem className="hidden md:flex">
-          <motion.div
-            whileHover={{
-              scale: 1.05,
-              y: -3,
-            }}
-            whileTap={{ scale: 0.95 }}
-            onHoverStart={() => setHoverButton("register")}
-            onHoverEnd={() => setHoverButton(null)}
-            className="relative"
-          >
-            {/* Button glow effect - client-side only */}
-            {isClient && (
-              <motion.div
-                className={clsx(
-                  "absolute inset-0 rounded-full blur-md -z-10",
-                  theme === "dark"
-                    ? "bg-gradient-to-r from-cyan-400 to-blue-500"
-                    : "bg-gradient-to-r from-cyan-300 to-blue-400"
-                )}
-                animate={{
-                  opacity: [0.5, 0.8, 0.5],
-                  scale: [0.85, 0.9, 0.85],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            )}
-
+          <div className="relative">
             <Button
               as={Link}
               href="/auth/register"
-              className={clsx(
-                "text-white font-bold border-0 px-6 shadow-lg",
-                theme === "dark"
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                  : "bg-gradient-to-r from-cyan-500 to-blue-500"
-              )}
+              className="text-white font-bold border-0 px-6 shadow-lg bg-gradient-to-r from-cyan-500 to-blue-500"
               radius="full"
               startContent={
-                isClient ? (
-                  <motion.div
-                    animate={{
-                      rotate: [0, 10, -10, 0],
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="text-yellow-300"
-                  >
-                    <FaUserAstronaut className="text-lg" />
-                  </motion.div>
-                ) : (
-                  <span className="text-yellow-300">
-                    <FaUserAstronaut className="text-lg" />
-                  </span>
-                )
+                <span className="text-yellow-300">
+                  <FaUserAstronaut className="text-lg" />
+                </span>
               }
             >
               {t("auth", "register")}
-              {/* Animated particles on hover - client-side only with stable positions */}
-              {isClient && (
-                <AnimatePresence>
-                  {hoverButton === "register" && (
-                    <>
-                      {[...Array(5)].map((_, i) => {
-                        const posData = registerParticlesRef.current[i];
-                        return (
-                          <motion.div
-                            key={`register-particle-${i}`}
-                            className="absolute w-1.5 h-1.5 rounded-full bg-yellow-300"
-                            initial={{
-                              opacity: 0,
-                              x: 0,
-                              y: 0,
-                            }}
-                            animate={{
-                              opacity: [0, 1, 0],
-                              x: [0, posData[1]],
-                              y: [0, posData[2]],
-                            }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.8 + i * 0.1 }}
-                            style={{
-                              left: `${posData[0]}%`,
-                              top: "50%",
-                            }}
-                          />
-                        );
-                      })}
-                    </>
-                  )}
-                </AnimatePresence>
-              )}
             </Button>
-          </motion.div>
+          </div>
         </NavbarItem>
 
-        {/* Login button - theme aware */}
+        {/* Login button with consistent dark styling */}
         <NavbarItem className="hidden md:flex ml-2">
-          <motion.div
-            whileHover={{
-              scale: 1.05,
-              y: -2,
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="relative"
-            onHoverStart={() => setHoverButton("login")}
-            onHoverEnd={() => setHoverButton(null)}
-          >
+          <div className="flex items-center">
             <Button
               as={Link}
               href="/auth/login"
               variant="flat"
-              className={clsx(
-                "shadow-inner",
-                theme === "dark"
-                  ? "bg-white/10 text-white border border-white/20"
-                  : "bg-blue-50 text-blue-700 border border-blue-200"
-              )}
+              className="shadow-inner bg-white/10 text-white border border-white/20"
               radius="full"
-              startContent={
-                <motion.div
-                  animate={{ y: [0, -3, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <FaSpaceShuttle
-                    className={
-                      theme === "dark" ? "text-cyan-200" : "text-blue-400"
-                    }
-                  />
-                </motion.div>
-              }
+              startContent={<FaSpaceShuttle className="text-cyan-200" />}
             >
               {t("auth", "login")}
-              {/* Animated trail on hover */}
-              <AnimatePresence>
-                {hoverButton === "login" && (
-                  <>
-                    {[...Array(3)].map((_, i) => (
-                      <motion.div
-                        key={`login-trail-${i}`}
-                        className={clsx(
-                          "absolute right-3 h-1.5 w-6 rounded-full",
-                          theme === "dark" ? "bg-cyan-400/40" : "bg-blue-400/40"
-                        )}
-                        initial={{ opacity: 0, x: 0 }}
-                        animate={{
-                          opacity: [0, 0.7, 0],
-                          x: [0, -15 - i * 10],
-                        }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          delay: i * 0.2,
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
             </Button>
-          </motion.div>
+          </div>
         </NavbarItem>
       </NavbarContent>
 
-      {/* Mobile menu toggle - theme aware */}
+      {/* Mobile menu toggle with consistent dark styling */}
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <div className="flex items-center gap-2">
           {/* Language Switcher for Mobile */}
           <LanguageSwitcher />
 
-          {/* Mobile Theme Toggle */}
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className={clsx(
-              "p-1 rounded-full backdrop-blur-sm",
-              theme === "dark" ? "bg-blue-600/50" : "bg-blue-100/80"
-            )}
-          >
+          {/* Mobile Theme Toggle with dark styling */}
+          <div className="p-1 rounded-full backdrop-blur-sm bg-blue-600/50">
             <div className="relative overflow-hidden rounded-full flex items-center justify-center">
-              <AnimatePresence mode="wait">
-                {theme === "dark" ? (
-                  <motion.div
-                    key="moon-mobile"
-                    initial={{ rotate: -30, opacity: 0, scale: 0.5 }}
-                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <HiMoon className="w-5 h-5 text-cyan-300" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="sun-mobile"
-                    initial={{ rotate: 30, opacity: 0, scale: 0.5 }}
-                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotate: -30, opacity: 0, scale: 0.5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <HiSun className="w-5 h-5 text-yellow-500" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-            </div>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <NavbarMenuToggle
-              className={clsx(
-                "rounded-full p-1 backdrop-blur-sm",
-                theme === "dark"
-                  ? "text-white bg-blue-600/40"
-                  : "text-blue-700 bg-blue-100"
+              <HiMoon className="w-5 h-5 text-cyan-300" />
+              {isClient && (
+                <ThemeSwitch className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
               )}
-              icon={
-                isMenuOpen ? (
-                  <motion.div
-                    animate={{ rotate: 90 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <IoRocket
-                      className={`text-lg ${theme === "dark" ? "text-cyan-200" : "text-blue-400"}`}
-                    />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    animate={{ y: [0, -2, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <IoRocket
-                      className={`text-lg ${theme === "dark" ? "text-cyan-200" : "text-blue-400"}`}
-                    />
-                  </motion.div>
-                )
-              }
-              onChange={() => setIsMenuOpen(!isMenuOpen)}
-            />
-          </motion.div>
+            </div>
+          </div>
+
+          {/* Menu toggle with dark styling */}
+          <NavbarMenuToggle
+            className="rounded-full p-1 backdrop-blur-sm bg-blue-600/40"
+            icon={
+              <div>
+                <IoRocket className="text-lg text-cyan-200" />
+              </div>
+            }
+            onChange={() => setIsMenuOpen(!isMenuOpen)}
+          />
         </div>
       </NavbarContent>
 
-      {/* Mobile menu with improved animations - theme aware */}
+      {/* Mobile menu with consistent dark styling */}
       <AnimatePresence>
         {isMenuOpen && (
-          <NavbarMenu
-            className={clsx(
-              "pt-16 pb-10",
-              theme === "dark"
-                ? "bg-gradient-to-b from-blue-800/97 via-blue-700/97 to-indigo-800/97"
-                : "bg-gradient-to-b from-white/97 via-blue-50/97 to-indigo-50/97"
-            )}
-          >
+          <NavbarMenu className="bg-gradient-to-b from-blue-950/95 via-indigo-950/95 to-blue-900/95 pt-8 pb-6">
             {/* Navigation items with improved animations */}
             <motion.div
               className="flex flex-col gap-2 px-4 relative"
