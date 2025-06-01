@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import BlogSection from "@/components/BlogSection";
 import ChooseUsSection from "@/components/ChooseUsSection";
 import Educators from "@/components/Educators";
