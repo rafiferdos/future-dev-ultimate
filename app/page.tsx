@@ -388,7 +388,8 @@ export default function Home() {
                       <span className="relative z-10">
                         {language === "en" ? "Learn Coding" : "কোডিং শিখুন"}
                       </span>
-                      {isClient && (                        <motion.div
+                      {isClient && (
+                        <motion.div
                           className="absolute -bottom-1 left-0 h-4 w-full rounded-md -z-0 opacity-70"
                           style={{
                             backgroundImage:
@@ -754,10 +755,12 @@ export default function Home() {
                           className="w-3 h-3 rounded-full bg-green-500"
                           whileHover={{ scale: 1.2 }}
                         />
-                      </div>
+                      </div>{" "}
                       <div
                         className={`text-xs font-mono ${
-                          theme === "dark" ? "text-blue-300" : "text-blue-600"
+                          isClient && safeTheme === "dark"
+                            ? "text-blue-300"
+                            : "text-blue-600"
                         }`}
                       >
                         <motion.div
@@ -1002,12 +1005,16 @@ export default function Home() {
                         ))}
                       </AnimatePresence>
                       {/* Blinking cursor with typing animation */}
-                      <div className="flex items-center mt-2">                        <motion.span
+                      <div className="flex items-center mt-2">
+                        {" "}
+                        <motion.span
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 2.7 }}
                           className={
-                            isClient && safeTheme === "dark" ? "text-blue-100" : "text-blue-900"
+                            isClient && safeTheme === "dark"
+                              ? "text-blue-100"
+                              : "text-blue-900"
                           }
                         >
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1017,7 +1024,9 @@ export default function Home() {
                           className="inline-block w-2 h-5 ml-1"
                           style={{
                             backgroundColor:
-                              isClient && safeTheme === "dark" ? "#f0f8ff" : "#1e3a8a",
+                              isClient && safeTheme === "dark"
+                                ? "#f0f8ff"
+                                : "#1e3a8a",
                           }}
                           animate={{ opacity: [1, 0, 1] }}
                           transition={{ duration: 1, repeat: Infinity }}
@@ -1033,16 +1042,17 @@ export default function Home() {
                     transition={{ delay: 1.8, duration: 0.5, type: "spring" }}
                     whileHover={{ y: -5, rotate: 5, scale: 1.1 }}
                   >
+                    {" "}
                     <div
                       className="w-14 h-14 flex items-center justify-center rounded-full shadow-lg"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(135deg, rgba(6, 182, 212, 0.7), rgba(59, 130, 246, 0.7))"
                             : "linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(59, 130, 246, 0.9))",
                         backdropFilter: "blur(10px)",
                         border:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "1px solid rgba(103, 232, 249, 0.2)"
                             : "1px solid rgba(103, 232, 249, 0.4)",
                       }}
@@ -1069,16 +1079,17 @@ export default function Home() {
                     transition={{ delay: 2.0, duration: 0.5, type: "spring" }}
                     whileHover={{ y: -5, rotate: -5, scale: 1.1 }}
                   >
+                    {" "}
                     <div
                       className="w-14 h-14 flex items-center justify-center rounded-full shadow-lg"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(135deg, rgba(192, 132, 252, 0.7), rgba(139, 92, 246, 0.7))"
                             : "linear-gradient(135deg, rgba(192, 132, 252, 0.9), rgba(139, 92, 246, 0.9))",
                         backdropFilter: "blur(10px)",
                         border:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "1px solid rgba(192, 132, 252, 0.2)"
                             : "1px solid rgba(192, 132, 252, 0.4)",
                       }}
@@ -1109,16 +1120,17 @@ export default function Home() {
                     transition={{ delay: 2.2, duration: 0.5, type: "spring" }}
                     whileHover={{ y: -5, rotate: 5, scale: 1.1 }}
                   >
+                    {" "}
                     <div
                       className="w-14 h-14 flex items-center justify-center rounded-full shadow-lg"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(135deg, rgba(52, 211, 153, 0.7), rgba(16, 185, 129, 0.7))"
                             : "linear-gradient(135deg, rgba(52, 211, 153, 0.9), rgba(16, 185, 129, 0.9))",
                         backdropFilter: "blur(10px)",
                         border:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "1px solid rgba(52, 211, 153, 0.2)"
                             : "1px solid rgba(52, 211, 153, 0.4)",
                       }}
@@ -1145,11 +1157,12 @@ export default function Home() {
                     animate={{ opacity: 0.2 }}
                     transition={{ delay: 2.5, duration: 0.5 }}
                   >
+                    {" "}
                     <div
                       className="h-1 w-full rounded-full mb-3"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.7), transparent)"
                             : "linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.7), transparent)",
                       }}
@@ -1158,7 +1171,7 @@ export default function Home() {
                       className="h-1 w-[60%] mx-auto rounded-full mb-3"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.7), transparent)"
                             : "linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.7), transparent)",
                       }}
@@ -1167,7 +1180,7 @@ export default function Home() {
                       className="h-1 w-[40%] mx-auto rounded-full"
                       style={{
                         background:
-                          theme === "dark"
+                          isClient && safeTheme === "dark"
                             ? "linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.7), transparent)"
                             : "linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.7), transparent)",
                       }}
@@ -1184,12 +1197,17 @@ export default function Home() {
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
+            {" "}
             <Link
               href="#explore"
               className={`flex flex-col items-center ${
-                theme === "dark" ? "text-blue-200" : "text-blue-600"
+                isClient && safeTheme === "dark"
+                  ? "text-blue-200"
+                  : "text-blue-600"
               } hover:${
-                theme === "dark" ? "text-white" : "text-blue-800"
+                isClient && safeTheme === "dark"
+                  ? "text-white"
+                  : "text-blue-800"
               } transition-colors`}
             >
               <span className="text-sm mb-2">
@@ -1197,14 +1215,16 @@ export default function Home() {
               </span>
               <motion.div
                 className={`w-8 h-14 rounded-full flex justify-center items-start p-1 ${
-                  theme === "dark"
+                  isClient && safeTheme === "dark"
                     ? "border-2 border-blue-200"
                     : "border-2 border-blue-400"
                 }`}
               >
                 <motion.div
                   className={`w-2 h-2 rounded-full ${
-                    theme === "dark" ? "bg-blue-200" : "bg-blue-500"
+                    isClient && safeTheme === "dark"
+                      ? "bg-blue-200"
+                      : "bg-blue-500"
                   }`}
                   animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
@@ -1216,10 +1236,9 @@ export default function Home() {
       </div>
 
       {/* Enhanced curved divider with animated wave */}
-      <div className="w-full relative overflow-hidden">
-        <div
+      <div className="w-full relative overflow-hidden">        <div
           className={`w-full h-24 ${
-            theme === "dark"
+            isClient && safeTheme === "dark"
               ? "bg-gradient-to-b from-indigo-900 to-blue-900/20"
               : "bg-gradient-to-b from-indigo-100 to-blue-50"
           }`}
@@ -1232,11 +1251,11 @@ export default function Home() {
         >
           <motion.path
             d="M0 50H1440V100H0V50Z"
-            className={theme === "dark" ? "fill-blue-900/20" : "fill-blue-50"}
+            className={isClient && safeTheme === "dark" ? "fill-blue-900/20" : "fill-blue-50"}
           />
           <motion.path
             d="M0 50C240 16.6667 480 0 720 0C960 0 1200 16.6667 1440 50V100H0V50Z"
-            className={theme === "dark" ? "fill-indigo-900" : "fill-indigo-100"}
+            className={isClient && safeTheme === "dark" ? "fill-indigo-900" : "fill-indigo-100"}
             animate={{
               d: [
                 "M0 50C240 16.6667 480 0 720 0C960 0 1200 16.6667 1440 50V100H0V50Z",
