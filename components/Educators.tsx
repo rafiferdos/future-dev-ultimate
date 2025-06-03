@@ -15,13 +15,13 @@ import {
   RiStarSmileFill,
   RiTeamFill,
 } from "react-icons/ri";
+import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/bundle";
 import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from 'swiper';
 import educatorsData from "../lib/educatorsData";
 
 type Educator = {
@@ -50,8 +50,8 @@ const enhancedEducatorsData = educatorsData.map((educator, index) => ({
     ["Game Development", "Unity", "C#"],
     ["Robotics", "IoT", "Hardware"],
   ][index % 4],
-  rating: 4.8 + (index * 0.05) % 0.2, // Deterministic rating based on index
-  studentsCount: 150 + (index * 73) % 350, // Deterministic student count
+  rating: 4.8 + ((index * 0.05) % 0.2), // Deterministic rating based on index
+  studentsCount: 150 + ((index * 73) % 350), // Deterministic student count
   bio: [
     "Passionate about teaching technology to young minds and creating innovative learning experiences.",
     "Dedicated educator with expertise in mobile app development and interactive learning methodologies.",
@@ -107,7 +107,9 @@ const Educators: React.FC = () => {
   };
 
   return (
-    <div className="py-24 relative overflow-hidden">      {/* Enhanced Background Elements */}
+    <div className="py-24 relative overflow-hidden">
+      {" "}
+      {/* Enhanced Background Elements */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Dynamic grid pattern */}
         <div
@@ -120,7 +122,6 @@ const Educators: React.FC = () => {
             backgroundSize: "30px 30px",
           }}
         />
-
         {/* Floating geometric shapes - only render on client to prevent hydration mismatch */}
         {isClient && (
           <div className="absolute inset-0">
@@ -129,10 +130,10 @@ const Educators: React.FC = () => {
                 key={i}
                 className="absolute"
                 style={{
-                  width: (20 + (i * 7) % 40) + "px", // Deterministic size
-                  height: (20 + (i * 7) % 40) + "px", // Deterministic size
-                  top: (10 + (i * 13) % 80) + "%", // Deterministic position
-                  left: (5 + (i * 17) % 90) + "%", // Deterministic position
+                  width: 20 + ((i * 7) % 40) + "px", // Deterministic size
+                  height: 20 + ((i * 7) % 40) + "px", // Deterministic size
+                  top: 10 + ((i * 13) % 80) + "%", // Deterministic position
+                  left: 5 + ((i * 17) % 90) + "%", // Deterministic position
                   background:
                     safeTheme === "dark"
                       ? `linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1))`
@@ -156,8 +157,8 @@ const Educators: React.FC = () => {
             ))}
           </div>
         )}
-
-        {/* Large glowing orbs */}        <motion.div
+        {/* Large glowing orbs */}{" "}
+        <motion.div
           className="absolute w-[50rem] h-[50rem] rounded-full blur-[150px]"
           style={{
             background:
@@ -176,7 +177,8 @@ const Educators: React.FC = () => {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-        />        <motion.div
+        />{" "}
+        <motion.div
           className="absolute w-[45rem] h-[45rem] rounded-full blur-[140px]"
           style={{
             background:
@@ -197,7 +199,6 @@ const Educators: React.FC = () => {
             delay: 2,
           }}
         />
-
         {/* Tech-inspired connecting lines */}
         <svg
           className="absolute w-full h-full opacity-5"
@@ -230,7 +231,6 @@ const Educators: React.FC = () => {
           />
         </svg>
       </div>
-
       <div className="max-w-7xl px-6 mx-auto relative z-10">
         <motion.div
           ref={ref}
@@ -305,7 +305,8 @@ const Educators: React.FC = () => {
               {enhancedEducatorsData.map((_, index) => (
                 <motion.button
                   key={index}
-                  className="mx-1 w-3 h-3 rounded-full transition-all duration-300"                  style={{
+                  className="mx-1 w-3 h-3 rounded-full transition-all duration-300"
+                  style={{
                     background:
                       activeSlide === index
                         ? isClient && safeTheme === "dark"
@@ -372,7 +373,8 @@ const Educators: React.FC = () => {
           {/* Call to Action Section */}
           <motion.div variants={itemVariants} className="text-center mt-16">
             <motion.div
-              className="inline-block p-8 rounded-2xl"              style={{
+              className="inline-block p-8 rounded-2xl"
+              style={{
                 background:
                   isClient && safeTheme === "dark"
                     ? "rgba(15, 23, 42, 0.6)"
@@ -415,7 +417,8 @@ const Educators: React.FC = () => {
               </p>
               <Link href="/careers">
                 <motion.button
-                  className="px-6 py-3 rounded-full font-medium text-white"                  style={{
+                  className="px-6 py-3 rounded-full font-medium text-white"
+                  style={{
                     background:
                       isClient && safeTheme === "dark"
                         ? "linear-gradient(45deg, #38bdf8, #8b5cf6)"
@@ -436,7 +439,10 @@ const Educators: React.FC = () => {
 };
 
 // Enhanced Educator Card Component
-const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educator, index }) => {
+const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({
+  educator,
+  index,
+}) => {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const isClient = useIsClient();
@@ -453,7 +459,8 @@ const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educato
       transition={{ type: "spring", stiffness: 300, damping: 15 }}
     >
       <div
-        className="rounded-3xl overflow-hidden h-full relative"        style={{
+        className="rounded-3xl overflow-hidden h-full relative"
+        style={{
           background:
             isClient && safeTheme === "dark"
               ? "rgba(15, 23, 42, 0.7)"
@@ -507,7 +514,9 @@ const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educato
                 repeat: Infinity,
                 ease: "linear",
               }}
-            >              <div
+            >
+              {" "}
+              <div
                 className="w-full h-full rounded-full"
                 style={{
                   background:
@@ -609,12 +618,14 @@ const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educato
             {educator.expertise?.slice(0, 2).map((skill, i) => (
               <motion.span
                 key={i}
-                className="px-2 py-1 text-xs rounded-full"                style={{
+                className="px-2 py-1 text-xs rounded-full"
+                style={{
                   background:
                     isClient && safeTheme === "dark"
                       ? "rgba(56, 189, 248, 0.2)"
                       : "rgba(59, 130, 246, 0.1)",
-                  color: isClient && safeTheme === "dark" ? "#38bdf8" : "#3b82f6",
+                  color:
+                    isClient && safeTheme === "dark" ? "#38bdf8" : "#3b82f6",
                 }}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -629,7 +640,8 @@ const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educato
           <div className="flex items-center justify-between">
             <Link href={`mailto:${educator.email}`}>
               <motion.button
-                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm"                style={{
+                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm"
+                style={{
                   background:
                     isClient && safeTheme === "dark"
                       ? "rgba(15, 23, 42, 0.8)"
@@ -732,7 +744,8 @@ const TeamStat: React.FC<TeamStatProps> = ({ icon, number, label, color }) => {
   const safeTheme = isClient ? theme || "light" : "light";
 
   const getColorClasses = (color: string) => {
-    switch (color) {      case "blue":
+    switch (color) {
+      case "blue":
         return {
           iconBg:
             isClient && safeTheme === "dark"
@@ -775,7 +788,8 @@ const TeamStat: React.FC<TeamStatProps> = ({ icon, number, label, color }) => {
 
   return (
     <motion.div
-      className="flex items-center gap-3 px-4 py-3 rounded-xl"      style={{
+      className="flex items-center gap-3 px-4 py-3 rounded-xl"
+      style={{
         background:
           isClient && safeTheme === "dark"
             ? "rgba(15, 23, 42, 0.5)"

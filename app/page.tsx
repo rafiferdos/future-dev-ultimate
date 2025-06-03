@@ -1236,7 +1236,9 @@ export default function Home() {
       </div>
 
       {/* Enhanced curved divider with animated wave */}
-      <div className="w-full relative overflow-hidden">        <div
+      <div className="w-full relative overflow-hidden">
+        {" "}
+        <div
           className={`w-full h-24 ${
             isClient && safeTheme === "dark"
               ? "bg-gradient-to-b from-indigo-900 to-blue-900/20"
@@ -1251,11 +1253,19 @@ export default function Home() {
         >
           <motion.path
             d="M0 50H1440V100H0V50Z"
-            className={isClient && safeTheme === "dark" ? "fill-blue-900/20" : "fill-blue-50"}
+            className={
+              isClient && safeTheme === "dark"
+                ? "fill-blue-900/20"
+                : "fill-blue-50"
+            }
           />
           <motion.path
             d="M0 50C240 16.6667 480 0 720 0C960 0 1200 16.6667 1440 50V100H0V50Z"
-            className={isClient && safeTheme === "dark" ? "fill-indigo-900" : "fill-indigo-100"}
+            className={
+              isClient && safeTheme === "dark"
+                ? "fill-indigo-900"
+                : "fill-indigo-100"
+            }
             animate={{
               d: [
                 "M0 50C240 16.6667 480 0 720 0C960 0 1200 16.6667 1440 50V100H0V50Z",
