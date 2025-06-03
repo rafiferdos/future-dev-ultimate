@@ -21,6 +21,7 @@ import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from 'swiper';
 import educatorsData from "../lib/educatorsData";
 
 type Educator = {
@@ -39,7 +40,7 @@ type Educator = {
   achievements?: string[];
 };
 
-// Enhanced educators data with additional info
+// Enhanced educators data with additional info (using deterministic values to prevent hydration mismatch)
 const enhancedEducatorsData = educatorsData.map((educator, index) => ({
   ...educator,
   experience: ["5+ years", "3+ years", "7+ years", "4+ years"][index % 4],
@@ -49,8 +50,8 @@ const enhancedEducatorsData = educatorsData.map((educator, index) => ({
     ["Game Development", "Unity", "C#"],
     ["Robotics", "IoT", "Hardware"],
   ][index % 4],
-  rating: 4.8 + Math.random() * 0.2,
-  studentsCount: Math.floor(Math.random() * 500) + 100,
+  rating: 4.8 + (index * 0.05) % 0.2, // Deterministic rating based on index
+  studentsCount: 150 + (index * 73) % 350, // Deterministic student count
   bio: [
     "Passionate about teaching technology to young minds and creating innovative learning experiences.",
     "Dedicated educator with expertise in mobile app development and interactive learning methodologies.",
@@ -69,11 +70,12 @@ const Educators: React.FC = () => {
   const { language } = useLanguage();
   const { theme } = useTheme();
   const isClient = useIsClient();
+  const safeTheme = isClient ? theme || "light" : "light";
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.2 });
   const controls = useAnimation();
   const [activeSlide, setActiveSlide] = useState(0);
-  const [swiperInstance, setSwiperInstance] = useState(null);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
   useEffect(() => {
     if (isInView) {
@@ -119,61 +121,61 @@ const Educators: React.FC = () => {
   };
 
   return (
-    <div className="py-24 relative overflow-hidden">
-      {/* Enhanced Background Elements */}
+    <div className="py-24 relative overflow-hidden">      {/* Enhanced Background Elements */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Dynamic grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              isClient && theme === "dark"
+              isClient && safeTheme === "dark"
                 ? "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)"
                 : "radial-gradient(circle at 1px 1px, rgba(59,130,246,0.8) 1px, transparent 0)",
             backgroundSize: "30px 30px",
           }}
         />
 
-        {/* Floating geometric shapes */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute"
-              style={{
-                width: Math.random() * 60 + 20 + "px",
-                height: Math.random() * 60 + 20 + "px",
-                top: Math.random() * 100 + "%",
-                left: Math.random() * 100 + "%",
-                background:
-                  isClient && theme === "dark"
-                    ? `linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1))`
-                    : `linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))`,
-                borderRadius: Math.random() > 0.5 ? "50%" : "20%",
-                filter: "blur(1px)",
-              }}
-              animate={{
-                y: [0, -20, 0],
-                x: [0, 10, 0],
-                opacity: [0.3, 0.7, 0.3],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 4,
-                repeat: Infinity,
-                repeatType: "reverse",
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
+        {/* Floating geometric shapes - only render on client to prevent hydration mismatch */}
+        {isClient && (
+          <div className="absolute inset-0">
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute"
+                style={{
+                  width: (20 + (i * 7) % 40) + "px", // Deterministic size
+                  height: (20 + (i * 7) % 40) + "px", // Deterministic size
+                  top: (10 + (i * 13) % 80) + "%", // Deterministic position
+                  left: (5 + (i * 17) % 90) + "%", // Deterministic position
+                  background:
+                    safeTheme === "dark"
+                      ? `linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1))`
+                      : `linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))`,
+                  borderRadius: i % 2 === 0 ? "50%" : "20%", // Deterministic shape
+                  filter: "blur(1px)",
+                }}
+                animate={{
+                  y: [0, -20, 0],
+                  x: [0, 10, 0],
+                  opacity: [0.3, 0.7, 0.3],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 4 + (i % 4), // Deterministic duration
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  delay: (i % 4) * 0.5, // Deterministic delay
+                }}
+              />
+            ))}
+          </div>
+        )}
 
-        {/* Large glowing orbs */}
-        <motion.div
+        {/* Large glowing orbs */}        <motion.div
           className="absolute w-[50rem] h-[50rem] rounded-full blur-[150px]"
           style={{
             background:
-              isClient && theme === "dark"
+              isClient && safeTheme === "dark"
                 ? "radial-gradient(circle, rgba(56, 189, 248, 0.08), transparent 70%)"
                 : "radial-gradient(circle, rgba(59, 130, 246, 0.04), transparent 70%)",
             top: "-10%",
@@ -188,13 +190,11 @@ const Educators: React.FC = () => {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-        />
-
-        <motion.div
+        />        <motion.div
           className="absolute w-[45rem] h-[45rem] rounded-full blur-[140px]"
           style={{
             background:
-              isClient && theme === "dark"
+              isClient && safeTheme === "dark"
                 ? "radial-gradient(circle, rgba(139, 92, 246, 0.08), transparent 70%)"
                 : "radial-gradient(circle, rgba(139, 92, 246, 0.04), transparent 70%)",
             bottom: "-10%",
@@ -220,7 +220,7 @@ const Educators: React.FC = () => {
         >
           <motion.path
             d="M10,20 Q30,10 50,20 T90,20"
-            stroke={isClient && theme === "dark" ? "#38bdf8" : "#3b82f6"}
+            stroke={isClient && safeTheme === "dark" ? "#38bdf8" : "#3b82f6"}
             strokeWidth="0.5"
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -232,7 +232,7 @@ const Educators: React.FC = () => {
           />
           <motion.path
             d="M10,80 Q30,90 50,80 T90,80"
-            stroke={isClient && theme === "dark" ? "#a855f7" : "#8b5cf6"}
+            stroke={isClient && safeTheme === "dark" ? "#a855f7" : "#8b5cf6"}
             strokeWidth="0.5"
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -319,14 +319,13 @@ const Educators: React.FC = () => {
               {enhancedEducatorsData.map((_, index) => (
                 <motion.button
                   key={index}
-                  className="mx-1 w-3 h-3 rounded-full transition-all duration-300"
-                  style={{
+                  className="mx-1 w-3 h-3 rounded-full transition-all duration-300"                  style={{
                     background:
                       activeSlide === index
-                        ? isClient && theme === "dark"
+                        ? isClient && safeTheme === "dark"
                           ? "linear-gradient(45deg, #38bdf8, #8b5cf6)"
                           : "linear-gradient(45deg, #3b82f6, #8b5cf6)"
-                        : isClient && theme === "dark"
+                        : isClient && safeTheme === "dark"
                           ? "rgba(255, 255, 255, 0.3)"
                           : "rgba(0, 0, 0, 0.2)",
                   }}
@@ -387,22 +386,21 @@ const Educators: React.FC = () => {
           {/* Call to Action Section */}
           <motion.div variants={itemVariants} className="text-center mt-16">
             <motion.div
-              className="inline-block p-8 rounded-2xl"
-              style={{
+              className="inline-block p-8 rounded-2xl"              style={{
                 background:
-                  isClient && theme === "dark"
+                  isClient && safeTheme === "dark"
                     ? "rgba(15, 23, 42, 0.6)"
                     : "rgba(255, 255, 255, 0.7)",
                 backdropFilter: "blur(10px)",
                 border:
-                  isClient && theme === "dark"
+                  isClient && safeTheme === "dark"
                     ? "1px solid rgba(56, 189, 248, 0.2)"
                     : "1px solid rgba(219, 234, 254, 0.8)",
               }}
               whileHover={{
                 y: -5,
                 boxShadow:
-                  isClient && theme === "dark"
+                  isClient && safeTheme === "dark"
                     ? "0 25px 50px -12px rgba(56, 189, 248, 0.25)"
                     : "0 25px 50px -12px rgba(59, 130, 246, 0.15)",
               }}
@@ -431,10 +429,9 @@ const Educators: React.FC = () => {
               </p>
               <Link href="/careers">
                 <motion.button
-                  className="px-6 py-3 rounded-full font-medium text-white"
-                  style={{
+                  className="px-6 py-3 rounded-full font-medium text-white"                  style={{
                     background:
-                      isClient && theme === "dark"
+                      isClient && safeTheme === "dark"
                         ? "linear-gradient(45deg, #38bdf8, #8b5cf6)"
                         : "linear-gradient(45deg, #3b82f6, #8b5cf6)",
                   }}
@@ -453,10 +450,11 @@ const Educators: React.FC = () => {
 };
 
 // Enhanced Educator Card Component
-const EducatorCard = ({ educator, index }) => {
+const EducatorCard: React.FC<{ educator: Educator; index: number }> = ({ educator, index }) => {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const isClient = useIsClient();
+  const safeTheme = isClient ? theme || "light" : "light";
   const [isHovered, setIsHovered] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -469,19 +467,18 @@ const EducatorCard = ({ educator, index }) => {
       transition={{ type: "spring", stiffness: 300, damping: 15 }}
     >
       <div
-        className="rounded-3xl overflow-hidden h-full relative"
-        style={{
+        className="rounded-3xl overflow-hidden h-full relative"        style={{
           background:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "rgba(15, 23, 42, 0.7)"
               : "rgba(255, 255, 255, 0.9)",
           backdropFilter: "blur(15px)",
           border:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "1px solid rgba(56, 189, 248, 0.3)"
               : "1px solid rgba(219, 234, 254, 0.8)",
           boxShadow: isHovered
-            ? isClient && theme === "dark"
+            ? isClient && safeTheme === "dark"
               ? "0 25px 50px -12px rgba(56, 189, 248, 0.25), 0 0 0 1px rgba(56, 189, 248, 0.1)"
               : "0 25px 50px -12px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.1)"
             : "0 10px 30px -5px rgba(0, 0, 0, 0.1)",
@@ -524,12 +521,11 @@ const EducatorCard = ({ educator, index }) => {
                 repeat: Infinity,
                 ease: "linear",
               }}
-            >
-              <div
+            >              <div
                 className="w-full h-full rounded-full"
                 style={{
                   background:
-                    isClient && theme === "dark" ? "#0f172a" : "#ffffff",
+                    isClient && safeTheme === "dark" ? "#0f172a" : "#ffffff",
                 }}
               />
             </motion.div>
@@ -627,13 +623,12 @@ const EducatorCard = ({ educator, index }) => {
             {educator.expertise?.slice(0, 2).map((skill, i) => (
               <motion.span
                 key={i}
-                className="px-2 py-1 text-xs rounded-full"
-                style={{
+                className="px-2 py-1 text-xs rounded-full"                style={{
                   background:
-                    isClient && theme === "dark"
+                    isClient && safeTheme === "dark"
                       ? "rgba(56, 189, 248, 0.2)"
                       : "rgba(59, 130, 246, 0.1)",
-                  color: isClient && theme === "dark" ? "#38bdf8" : "#3b82f6",
+                  color: isClient && safeTheme === "dark" ? "#38bdf8" : "#3b82f6",
                 }}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -648,14 +643,13 @@ const EducatorCard = ({ educator, index }) => {
           <div className="flex items-center justify-between">
             <Link href={`mailto:${educator.email}`}>
               <motion.button
-                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm"
-                style={{
+                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm"                style={{
                   background:
-                    isClient && theme === "dark"
+                    isClient && safeTheme === "dark"
                       ? "rgba(15, 23, 42, 0.8)"
                       : "rgba(255, 255, 255, 0.8)",
                   border:
-                    isClient && theme === "dark"
+                    isClient && safeTheme === "dark"
                       ? "1px solid rgba(56, 189, 248, 0.3)"
                       : "1px solid rgba(219, 234, 254, 0.8)",
                 }}
@@ -739,47 +733,54 @@ const EducatorCard = ({ educator, index }) => {
 };
 
 // Team Statistics Component
-const TeamStat = ({ icon, number, label, color }) => {
+interface TeamStatProps {
+  icon: React.ReactNode;
+  number: string;
+  label: string;
+  color: "blue" | "amber" | "purple";
+}
+
+const TeamStat: React.FC<TeamStatProps> = ({ icon, number, label, color }) => {
   const { theme } = useTheme();
   const isClient = useIsClient();
+  const safeTheme = isClient ? theme || "light" : "light";
 
-  const getColorClasses = (color) => {
-    switch (color) {
-      case "blue":
+  const getColorClasses = (color: string) => {
+    switch (color) {      case "blue":
         return {
           iconBg:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "rgba(59, 130, 246, 0.2)"
               : "rgba(59, 130, 246, 0.1)",
           iconColor: "#3b82f6",
-          textColor: isClient && theme === "dark" ? "#60a5fa" : "#2563eb",
+          textColor: isClient && safeTheme === "dark" ? "#60a5fa" : "#2563eb",
         };
       case "amber":
         return {
           iconBg:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "rgba(245, 158, 11, 0.2)"
               : "rgba(245, 158, 11, 0.1)",
           iconColor: "#f59e0b",
-          textColor: isClient && theme === "dark" ? "#fbbf24" : "#d97706",
+          textColor: isClient && safeTheme === "dark" ? "#fbbf24" : "#d97706",
         };
       case "purple":
         return {
           iconBg:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "rgba(139, 92, 246, 0.2)"
               : "rgba(139, 92, 246, 0.1)",
           iconColor: "#8b5cf6",
-          textColor: isClient && theme === "dark" ? "#a78bfa" : "#7c3aed",
+          textColor: isClient && safeTheme === "dark" ? "#a78bfa" : "#7c3aed",
         };
       default:
         return {
           iconBg:
-            isClient && theme === "dark"
+            isClient && safeTheme === "dark"
               ? "rgba(59, 130, 246, 0.2)"
               : "rgba(59, 130, 246, 0.1)",
           iconColor: "#3b82f6",
-          textColor: isClient && theme === "dark" ? "#60a5fa" : "#2563eb",
+          textColor: isClient && safeTheme === "dark" ? "#60a5fa" : "#2563eb",
         };
     }
   };
@@ -788,22 +789,21 @@ const TeamStat = ({ icon, number, label, color }) => {
 
   return (
     <motion.div
-      className="flex items-center gap-3 px-4 py-3 rounded-xl"
-      style={{
+      className="flex items-center gap-3 px-4 py-3 rounded-xl"      style={{
         background:
-          isClient && theme === "dark"
+          isClient && safeTheme === "dark"
             ? "rgba(15, 23, 42, 0.5)"
             : "rgba(255, 255, 255, 0.7)",
         backdropFilter: "blur(10px)",
         border:
-          isClient && theme === "dark"
+          isClient && safeTheme === "dark"
             ? "1px solid rgba(56, 189, 248, 0.2)"
             : "1px solid rgba(219, 234, 254, 0.8)",
       }}
       whileHover={{
         y: -3,
         boxShadow:
-          isClient && theme === "dark"
+          isClient && safeTheme === "dark"
             ? "0 10px 25px -5px rgba(0, 0, 0, 0.3)"
             : "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
       }}
