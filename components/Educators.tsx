@@ -93,7 +93,6 @@ const Educators: React.FC = () => {
       },
     },
   };
-
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
@@ -102,19 +101,6 @@ const Educators: React.FC = () => {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 15,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { scale: 0.9, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 120,
         damping: 15,
       },
     },
